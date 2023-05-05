@@ -12,12 +12,16 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.leth.ctg.ui.navigation.AppDestinations
 import com.leth.ctg.ui.navigation.AppDestinations.getTrainingScreenPath
+import com.leth.ctg.ui.views.TopBarState
 import com.leth.ctg.utils.TrainingTypes
 
 @Composable
-fun SelectTrainingScreen(navigation: NavController) {
+fun SelectTrainingScreen(
+    navigation: NavController,
+    modifier: Modifier,
+) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight(),
         verticalArrangement = Arrangement.Center,

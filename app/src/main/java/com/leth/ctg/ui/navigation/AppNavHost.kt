@@ -5,10 +5,12 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.leth.ctg.ui.navigation.AppDestinations.SELECT_TRAINING_SCREEN
@@ -37,6 +39,7 @@ private const val TWEEN_FOR_NAVIGATION = 200
 @Composable
 fun AppNavHost(
     navController: NavHostController,
+    modifier: Modifier,
 ) {
     AnimatedNavHost(
         navController = navController,
@@ -45,7 +48,10 @@ fun AppNavHost(
         startDestination = SELECT_TRAINING_SCREEN,
     ) {
         composable(SELECT_TRAINING_SCREEN) {
-            SelectTrainingScreen(navController)
+            SelectTrainingScreen(
+                navigation = navController,
+                modifier = modifier,
+            )
         }
         composable(
             route = TRAINING_SCREEN,
@@ -57,7 +63,8 @@ fun AppNavHost(
                 trainingType = backStackEntry.arguments?.getString(
                     AppDestinations.KEY_TRAINING_TYPE,
                     TrainingTypes.UNKNOWN.title
-                )
+                ),
+                modifier = modifier,
             )
         }
     }

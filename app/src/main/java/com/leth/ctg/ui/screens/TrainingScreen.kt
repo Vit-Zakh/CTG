@@ -5,9 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun TrainingScreen(trainingType: String?) {
+fun TrainingScreen(
+    trainingType: String?,
+    modifier: Modifier,
+) {
     Text(
         text = "$trainingType",
-        modifier = Modifier
+        modifier = modifier
     )
 }
