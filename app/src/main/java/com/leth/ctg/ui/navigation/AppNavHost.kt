@@ -6,32 +6,12 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
-import androidx.navigation.navigation
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
-import com.leth.ctg.ui.navigation.AppDestinations.SELECT_TRAINING_SCREEN
-import com.leth.ctg.ui.navigation.AppDestinations.TRAINING_SCREEN
-import com.leth.ctg.ui.screens.SelectTrainingScreen
-import com.leth.ctg.ui.screens.TrainingScreen
-import com.leth.ctg.utils.TrainingTypes
+import com.leth.ctg.ui.screens.PreferencesScreen
 
-object AppDestinations {
-    const val KEY_TRAINING_TYPE = "training_type"
-
-    const val SELECT_TRAINING_SCREEN = "select_training_screen"
-    const val TRAINING_SCREEN = "training_screen/{$KEY_TRAINING_TYPE}"
-
-    fun getTrainingScreenPath(trainingType: String?): String =
-        if (!trainingType.isNullOrBlank()) {
-            "training_screen/$trainingType"
-        } else {
-            "training_screen/${TrainingTypes.UNKNOWN.title}"
-        }
-}
+const val PREFERENCES_SCREEN = "preferences_screen"
 
 private const val TWEEN_FOR_NAVIGATION = 200
 
@@ -45,25 +25,12 @@ fun AppNavHost(
         navController = navController,
         enterTransition = { fadeIn(animationSpec = tween(TWEEN_FOR_NAVIGATION)) },
         exitTransition = { ExitTransition.None },
-        startDestination = SELECT_TRAINING_SCREEN,
+        startDestination = TRAININGS,
     ) {
-        composable(SELECT_TRAINING_SCREEN) {
-            SelectTrainingScreen(
+        trainingsNavGraph(navController, modifier)
+        composable(route = PREFERENCES_SCREEN) {
+            PreferencesScreen(
                 navigation = navController,
-                modifier = modifier,
-            )
-        }
-        composable(
-            route = TRAINING_SCREEN,
-            arguments = listOf(navArgument(AppDestinations.KEY_TRAINING_TYPE) {
-                type = NavType.StringType
-            })
-        ) { backStackEntry ->
-            TrainingScreen(
-                trainingType = backStackEntry.arguments?.getString(
-                    AppDestinations.KEY_TRAINING_TYPE,
-                    TrainingTypes.UNKNOWN.title
-                ),
                 modifier = modifier,
             )
         }

@@ -10,9 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.leth.ctg.ui.navigation.AppDestinations
-import com.leth.ctg.ui.navigation.AppDestinations.getTrainingScreenPath
-import com.leth.ctg.ui.views.TopBarState
+import com.leth.ctg.ui.navigation.getTrainingScreenPath
 import com.leth.ctg.utils.TrainingTypes
 
 @Composable
