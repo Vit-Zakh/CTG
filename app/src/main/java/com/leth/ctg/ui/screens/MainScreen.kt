@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.leth.ctg.ui.navigation.AppNavHost
 import com.leth.ctg.ui.theme.CTGTheme
+import com.leth.ctg.ui.views.BottomBar
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -17,6 +18,7 @@ fun MainScreen() {
         val navController = rememberAnimatedNavController()
 
         Scaffold(
+            bottomBar = { BottomBar(navController = navController) }
         ) { paddingValues ->
             AppNavHost(
                 navController = navController,
