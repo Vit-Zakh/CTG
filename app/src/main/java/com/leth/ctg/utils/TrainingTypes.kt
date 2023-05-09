@@ -14,5 +14,6 @@ enum class TrainingTag {
     ARMS,
     LEGS,
     CROSSFIT,
+    STRETCHING,
     SURPRISE,
 }
