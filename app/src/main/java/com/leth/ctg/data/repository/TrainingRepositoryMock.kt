@@ -4,10 +4,12 @@ import com.leth.ctg.domain.models.TrainingItemModel
 import com.leth.ctg.domain.models.TrainingSetupModel
 import com.leth.ctg.domain.repository.TrainingRepository
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class TrainingRepositoryMock : TrainingRepository {
 
-    private val trainings = listOf(
+    private val trainingsList = listOf(
         TrainingItemModel(
             id = "test_id_1",
             title = "Test Title 1",
@@ -24,6 +26,12 @@ class TrainingRepositoryMock : TrainingRepository {
             imageUrl = "https://images.unsplash.com/photo-1584464457692-54516d705fe0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDM4fEJuLURqcmNCcndvfHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60"
         ),
     )
+
+    private val _trainings = MutableStateFlow(emptyList<TrainingItemModel>())
+    override val trainings: Flow<List<TrainingItemModel>> = _trainings
+
+    private val _preferences = MutableStateFlow(emptyList<TrainingSetupModel>())
+    override val preferences: Flow<List<TrainingSetupModel>> = _preferences
 
     private val preferencesList = listOf(
         TrainingSetupModel(
@@ -54,11 +62,13 @@ class TrainingRepositoryMock : TrainingRepository {
 
     override suspend fun fetchTrainings(): List<TrainingItemModel> {
         delay(300)
-        return trainings
+        _trainings.value = trainingsList
+        return trainingsList
     }
 
     override suspend fun fetchPreferences(): List<TrainingSetupModel> {
         delay(300)
+        _preferences.value = preferencesList
         return preferencesList
     }
 }

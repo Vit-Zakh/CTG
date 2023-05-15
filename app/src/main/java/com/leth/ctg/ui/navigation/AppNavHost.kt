@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
-import com.leth.ctg.ui.screens.PreferencesScreen
+import com.leth.ctg.ui.screens.preferences.PreferencesScreen
 
 const val PREFERENCES_SCREEN = "preferences_screen"
 
