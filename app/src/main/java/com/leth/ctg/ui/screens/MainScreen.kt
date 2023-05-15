@@ -16,9 +16,8 @@ import com.leth.ctg.ui.views.BottomBar
 fun MainScreen() {
     CTGTheme {
         val navController = rememberAnimatedNavController()
-
         Scaffold(
-            bottomBar = { BottomBar(navController = navController) }
+            bottomBar = { BottomBar(navController = navController) },
         ) { paddingValues ->
             AppNavHost(
                 navController = navController,

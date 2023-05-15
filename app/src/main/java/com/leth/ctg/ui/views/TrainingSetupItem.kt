@@ -19,7 +19,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,7 +39,6 @@ import com.leth.ctg.utils.TrainingTag
 
 @Composable
 fun TrainingSetupItem(
-//    modifier: Modifier,
     training: TrainingSetupModel,
     onTagClick: (TrainingTag) -> Unit,
 ) {
@@ -87,8 +85,6 @@ fun TrainingSetupItem(
                 contentPadding = PaddingValues(4.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
-//                horizontalArrangement = Arrangement.SpaceEvenly,
-//                verticalArrangement = Arrangement.Top,
             ) {
                 items(TrainingTag.values()) {
                     Text(
