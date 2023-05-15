@@ -8,7 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.navigation
-import com.leth.ctg.ui.screens.SelectTrainingScreen
+import com.leth.ctg.ui.screens.selection.SelectTrainingScreen
 import com.leth.ctg.ui.screens.TrainingScreen
 import com.leth.ctg.utils.TrainingTypes
 

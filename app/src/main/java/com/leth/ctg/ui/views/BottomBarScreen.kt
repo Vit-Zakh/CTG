@@ -1,37 +1,38 @@
 package com.leth.ctg.ui.views
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.leth.ctg.R
 import com.leth.ctg.ui.navigation.TRAININGS
 
 sealed class BottomBarScreen(
     val route: String,
     val title: String,
-    val icon: ImageVector,
+    @DrawableRes val icon: Int,
 ) {
     object Training : BottomBarScreen(
         route = TRAININGS,
         title = "Trainings",
-        icon = Icons.Default.Face,
+        icon = R.drawable.ic_exercise,
     )
 
     object Preferences : BottomBarScreen(
         route = "preferences_screen",
         title = "Preferences",
-        icon = Icons.Default.Star,
+        icon = R.drawable.ic_trainings_list,
     )
 }
 
@@ -66,6 +67,11 @@ fun RowScope.AddItem(
         } == true,
         onClick = { navController.navigate(screen.route) },
         label = { Text(text = screen.title) },
-        icon = { Icon(imageVector = screen.icon, contentDescription = screen.title) },
+        icon = {
+            Icon(
+                painterResource(id = screen.icon), contentDescription = screen.title,
+                modifier = Modifier.fillMaxSize(0.35f)
+            )
+        },
     )
 }
