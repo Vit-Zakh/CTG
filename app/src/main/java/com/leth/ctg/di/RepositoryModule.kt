@@ -55,5 +55,6 @@ object RepositoryModule {
     @Singleton
     fun provideTrainingsRepository(
         trainingFormatsDao: TrainingFormatsDao,
-    ): TrainingRepository = TrainingRepositoryMock(trainingFormatsDao)
+        exercisesDao: ExercisesDao,
+    ): TrainingRepository = TrainingRepositoryMock(trainingFormatsDao, exercisesDao)
 }

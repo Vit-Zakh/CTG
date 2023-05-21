@@ -17,16 +17,21 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,6 +42,7 @@ import com.leth.ctg.ui.theme.CTGTheme
 import com.leth.ctg.ui.theme.Purple80
 import com.leth.ctg.utils.TrainingTag
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrainingSetupItem(
     training: TrainingSetupModel,
@@ -45,6 +51,8 @@ fun TrainingSetupItem(
 
     val isChecked = remember { mutableStateOf(training.isEnabled) }
     val selectedTags = remember { mutableStateOf(training.tags) }
+    val titleValue = remember { mutableStateOf(training.title) }
+
 
     Row(
         modifier = Modifier
@@ -69,13 +77,20 @@ fun TrainingSetupItem(
                 .background(color = Purple80),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = training.title,
+            TextField(
+                value = titleValue.value,
+                onValueChange = { titleValue.value = it },
+                singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
-                textAlign = TextAlign.Center,
             )
+//            Text(
+//                text = training.title,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(horizontal = 8.dp, vertical = 4.dp),
+//                textAlign = TextAlign.Center,
+//            )
 //        }
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
