@@ -43,7 +43,7 @@ fun TrainingSetupItem(
     onTagClick: (TrainingTag) -> Unit,
 ) {
 
-    val isChecked = remember { mutableStateOf(false) }
+    val isChecked = remember { mutableStateOf(training.isEnabled) }
     val selectedTags = remember { mutableStateOf(training.tags) }
 
     Row(
@@ -133,7 +133,8 @@ fun TrainingSetupItemPreview() {
                 id = "test_id",
                 title = "Test Title",
                 imageUrl = null,
-                tags = emptyList()
+                tags = emptyList(),
+                isEnabled = false,
             )
         )
         {}

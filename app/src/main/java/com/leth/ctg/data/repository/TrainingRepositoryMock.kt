@@ -1,13 +1,21 @@
 package com.leth.ctg.data.repository
 
+import com.leth.ctg.data.database.dao.TrainingFormatsDao
+import com.leth.ctg.data.database.entity.toDomain
 import com.leth.ctg.domain.models.TrainingItemModel
 import com.leth.ctg.domain.models.TrainingSetupModel
+import com.leth.ctg.domain.models.toEntity
 import com.leth.ctg.domain.repository.TrainingRepository
+import com.leth.ctg.utils.TrainingTag
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class TrainingRepositoryMock : TrainingRepository {
+class TrainingRepositoryMock @Inject constructor(
+    private val trainingFormatsDao: TrainingFormatsDao,
+) : TrainingRepository {
 
     private val trainingsList = listOf(
         TrainingItemModel(
@@ -30,33 +38,50 @@ class TrainingRepositoryMock : TrainingRepository {
     private val _trainings = MutableStateFlow(emptyList<TrainingItemModel>())
     override val trainings: Flow<List<TrainingItemModel>> = _trainings
 
-    private val _preferences = MutableStateFlow(emptyList<TrainingSetupModel>())
-    override val preferences: Flow<List<TrainingSetupModel>> = _preferences
+    //    private val _preferences = MutableStateFlow(emptyList<TrainingSetupModel>())
+//    override val preferences: Flow<List<TrainingSetupModel>> = _preferences
+    override val preferences: Flow<List<TrainingSetupModel>> =
+        trainingFormatsDao.fetchAllFormats().map { list ->
+            list.map {
+                it.toDomain()
+//                TrainingSetupModel(
+//                    id = it.id,
+//                    title = it.title,
+//                    imageUrl = it.imageUrl,
+//                    tags = it.trainingTags,
+//                    isEnabled = it.isEnabled,
+//                )
+            }
+        }
 
     private val preferencesList = listOf(
         TrainingSetupModel(
             id = "test_id_1",
             title = "Test Title 1",
             imageUrl = null,
-            tags = emptyList()
+            tags = listOf(TrainingTag.CHEST, TrainingTag.ARMS),
+            isEnabled = true,
         ),
         TrainingSetupModel(
             id = "test_id_2",
             title = "Test Title 2",
             imageUrl = null,
-            tags = emptyList()
+            tags = listOf(TrainingTag.CHEST, TrainingTag.ARMS, TrainingTag.LEGS, TrainingTag.STRETCHING),
+            isEnabled = true,
         ),
         TrainingSetupModel(
             id = "test_id_3",
             title = "Test Title 3",
             imageUrl = null,
-            tags = emptyList()
+            tags = listOf(TrainingTag.CROSSFIT,),
+            isEnabled = false,
         ),
         TrainingSetupModel(
             id = "test_id_4",
             title = "Test Title 4",
             imageUrl = null,
-            tags = emptyList()
+            tags = listOf(TrainingTag.FULL_BODY,),
+            isEnabled = true,
         )
     )
 
@@ -66,9 +91,10 @@ class TrainingRepositoryMock : TrainingRepository {
         return trainingsList
     }
 
-    override suspend fun fetchPreferences(): List<TrainingSetupModel> {
+    override suspend fun fetchPreferences() {
         delay(300)
-        _preferences.value = preferencesList
-        return preferencesList
+        trainingFormatsDao.saveFormats(preferencesList.map {
+            it.toEntity()
+        })
     }
 }

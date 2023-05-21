@@ -13,6 +13,7 @@ enum class TrainingTag {
     BACK,
     ARMS,
     LEGS,
+    FULL_BODY,
     CROSSFIT,
     STRETCHING,
     SURPRISE,

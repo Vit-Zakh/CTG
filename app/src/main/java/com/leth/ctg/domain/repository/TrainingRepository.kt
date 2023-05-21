@@ -10,5 +10,5 @@ interface TrainingRepository {
 
     val preferences: Flow<List<TrainingSetupModel>>
     suspend fun fetchTrainings(): List<TrainingItemModel>
-    suspend fun fetchPreferences(): List<TrainingSetupModel>
+    suspend fun fetchPreferences()
 }
