@@ -44,7 +44,7 @@ fun BottomBar(navController: NavHostController) {
     val graph = currentDestination?.parent
 
 
-    NavigationBar() {
+    NavigationBar(modifier = Modifier) {
         screens.forEach { screen ->
             AddItem(
                 screen = screen,

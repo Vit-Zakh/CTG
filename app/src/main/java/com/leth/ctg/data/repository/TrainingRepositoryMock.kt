@@ -1,13 +1,24 @@
 package com.leth.ctg.data.repository
 
+import com.leth.ctg.data.database.dao.ExercisesDao
+import com.leth.ctg.data.database.dao.TrainingFormatsDao
+import com.leth.ctg.data.database.entity.toDomain
+import com.leth.ctg.domain.models.ExerciseModel
 import com.leth.ctg.domain.models.TrainingItemModel
+import com.leth.ctg.domain.models.TrainingModel
 import com.leth.ctg.domain.models.TrainingSetupModel
+import com.leth.ctg.domain.models.toEntity
 import com.leth.ctg.domain.repository.TrainingRepository
+import com.leth.ctg.utils.TrainingTag
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class TrainingRepositoryMock : TrainingRepository {
+class TrainingRepositoryMock @Inject constructor(
+    private val trainingFormatsDao: TrainingFormatsDao,
+    private val exercisesDao: ExercisesDao,
+) : TrainingRepository {
 
     private val trainingsList = listOf(
         TrainingItemModel(
@@ -27,48 +38,102 @@ class TrainingRepositoryMock : TrainingRepository {
         ),
     )
 
-    private val _trainings = MutableStateFlow(emptyList<TrainingItemModel>())
-    override val trainings: Flow<List<TrainingItemModel>> = _trainings
+    override val trainings: Flow<List<TrainingSetupModel>> =
+        trainingFormatsDao.fetchEnabledFormats().map { list ->
+            list.map {
+                it.toDomain()
+            }
+        }
 
-    private val _preferences = MutableStateFlow(emptyList<TrainingSetupModel>())
-    override val preferences: Flow<List<TrainingSetupModel>> = _preferences
+    override val preferences: Flow<List<TrainingSetupModel>> =
+        trainingFormatsDao.fetchAllFormats().map { list ->
+            list.map {
+                it.toDomain()
+            }
+        }
 
     private val preferencesList = listOf(
         TrainingSetupModel(
             id = "test_id_1",
             title = "Test Title 1",
             imageUrl = null,
-            tags = emptyList()
+            tags = listOf(TrainingTag.CHEST, TrainingTag.ARMS),
+            isEnabled = true,
         ),
         TrainingSetupModel(
             id = "test_id_2",
             title = "Test Title 2",
             imageUrl = null,
-            tags = emptyList()
+            tags = listOf(TrainingTag.CHEST, TrainingTag.ARMS, TrainingTag.LEGS, TrainingTag.STRETCHING),
+            isEnabled = true,
         ),
         TrainingSetupModel(
             id = "test_id_3",
             title = "Test Title 3",
             imageUrl = null,
-            tags = emptyList()
+            tags = listOf(TrainingTag.CROSSFIT,),
+            isEnabled = false,
         ),
         TrainingSetupModel(
             id = "test_id_4",
             title = "Test Title 4",
             imageUrl = null,
-            tags = emptyList()
+            tags = listOf(TrainingTag.FULL_BODY,),
+            isEnabled = true,
         )
     )
 
-    override suspend fun fetchTrainings(): List<TrainingItemModel> {
+    override suspend fun fetchPreferences() {
         delay(300)
-        _trainings.value = trainingsList
-        return trainingsList
+        trainingFormatsDao.saveFormats(preferencesList.map {
+            it.toEntity()
+        })
     }
 
-    override suspend fun fetchPreferences(): List<TrainingSetupModel> {
+    override suspend fun fetchTraining(setup: TrainingSetupModel): TrainingModel {
         delay(300)
-        _preferences.value = preferencesList
-        return preferencesList
+        return TrainingModel(
+            id = setup.id,
+            title = setup.title,
+            imageUrl = setup.imageUrl,
+            exercises = listOf(
+                ExerciseModel(
+                    id = "ex_id_1",
+                    title = "Incline Bench Press",
+                    type = TrainingTag.CHEST,
+                    category = "CORE,"
+                ),
+                ExerciseModel(
+                    id = "ex_id_2",
+                    title = "Bench Press",
+                    type = TrainingTag.CHEST,
+                    category = "CORE,"
+                ),
+                ExerciseModel(
+                    id = "ex_id_3",
+                    title = "Chest Fly",
+                    type = TrainingTag.CHEST,
+                    category = "AUX,"
+                ),
+                ExerciseModel(
+                    id = "ex_id_4",
+                    title = "Lat Pulldown",
+                    type = TrainingTag.BACK,
+                    category = "CORE,"
+                ),
+                ExerciseModel(
+                    id = "ex_id_5",
+                    title = "Bicep Curl",
+                    type = TrainingTag.ARMS,
+                    category = "AUX,"
+                ),
+                ExerciseModel(
+                    id = "ex_id_6",
+                    title = "Triceps pushdown",
+                    type = TrainingTag.ARMS,
+                    category = "AUX,"
+                ),
+            )
+        )
     }
 }

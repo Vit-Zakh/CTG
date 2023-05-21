@@ -1,14 +1,18 @@
 package com.leth.ctg.domain.repository
 
 import com.leth.ctg.domain.models.TrainingItemModel
+import com.leth.ctg.domain.models.TrainingModel
 import com.leth.ctg.domain.models.TrainingSetupModel
+import com.leth.ctg.utils.TrainingTag
 import kotlinx.coroutines.flow.Flow
 
 interface TrainingRepository {
 
-    val trainings: Flow<List<TrainingItemModel>>
+    val trainings: Flow<List<TrainingSetupModel>>
 
     val preferences: Flow<List<TrainingSetupModel>>
-    suspend fun fetchTrainings(): List<TrainingItemModel>
-    suspend fun fetchPreferences(): List<TrainingSetupModel>
+
+    suspend fun fetchPreferences()
+
+    suspend fun fetchTraining(setup: TrainingSetupModel): TrainingModel
 }
