@@ -57,7 +57,7 @@ fun TrainingSetupItem(
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .aspectRatio(16/9f)
+            .aspectRatio(16 / 9f)
             .clip(RoundedCornerShape(16.dp))
             .background(color = Color.LightGray),
         horizontalArrangement = Arrangement.Center,
@@ -80,6 +80,7 @@ fun TrainingSetupItem(
             TextField(
                 value = titleValue.value,
                 onValueChange = { titleValue.value = it },
+                placeholder = { if (titleValue.value.isEmpty()) Text(text = "Training Title") },
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -145,7 +146,7 @@ fun TrainingSetupItemPreview() {
     CTGTheme {
         TrainingSetupItem(
             training = TrainingSetupModel(
-                id = "test_id",
+                id = 1L,
                 title = "Test Title",
                 imageUrl = null,
                 tags = emptyList(),

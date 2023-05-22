@@ -2,6 +2,7 @@ package com.leth.ctg.data.repository
 
 import com.leth.ctg.data.database.dao.ExercisesDao
 import com.leth.ctg.data.database.dao.TrainingFormatsDao
+import com.leth.ctg.data.database.entity.TrainingFormatEntity
 import com.leth.ctg.data.database.entity.toDomain
 import com.leth.ctg.domain.models.ExerciseModel
 import com.leth.ctg.domain.models.TrainingItemModel
@@ -54,31 +55,36 @@ class TrainingRepositoryMock @Inject constructor(
 
     private val preferencesList = listOf(
         TrainingSetupModel(
-            id = "test_id_1",
+            id = 1L,
             title = "Test Title 1",
             imageUrl = null,
             tags = listOf(TrainingTag.CHEST, TrainingTag.ARMS),
             isEnabled = true,
         ),
         TrainingSetupModel(
-            id = "test_id_2",
+            id = 2L,
             title = "Test Title 2",
             imageUrl = null,
-            tags = listOf(TrainingTag.CHEST, TrainingTag.ARMS, TrainingTag.LEGS, TrainingTag.STRETCHING),
+            tags = listOf(
+                TrainingTag.CHEST,
+                TrainingTag.ARMS,
+                TrainingTag.LEGS,
+                TrainingTag.STRETCHING
+            ),
             isEnabled = true,
         ),
         TrainingSetupModel(
-            id = "test_id_3",
+            id = 3L,
             title = "Test Title 3",
             imageUrl = null,
-            tags = listOf(TrainingTag.CROSSFIT,),
+            tags = listOf(TrainingTag.CROSSFIT),
             isEnabled = false,
         ),
         TrainingSetupModel(
-            id = "test_id_4",
+            id = 4L,
             title = "Test Title 4",
             imageUrl = null,
-            tags = listOf(TrainingTag.FULL_BODY,),
+            tags = listOf(TrainingTag.FULL_BODY),
             isEnabled = true,
         )
     )
@@ -136,4 +142,19 @@ class TrainingRepositoryMock @Inject constructor(
             )
         )
     }
+
+    override suspend fun addNewTraining() = trainingFormatsDao
+        .addFormat(
+            TrainingFormatEntity(
+//                id = "",
+                title = "",
+                imageUrl = null,
+                trainingTags = emptyList(),
+                isEnabled = false,
+            )
+        )
+
+    override suspend fun updateTrainingDetails(training: TrainingSetupModel) = trainingFormatsDao.update(
+        training.toEntity()
+    )
 }

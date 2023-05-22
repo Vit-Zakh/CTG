@@ -10,13 +10,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -32,6 +39,8 @@ import com.leth.ctg.ui.theme.Purple80
 fun ExerciseItem(
     exerciseModel: ExerciseModel,
 ) {
+
+    val isChecked = remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
@@ -56,14 +65,24 @@ fun ExerciseItem(
                 .background(color = Purple80),
             verticalArrangement = Arrangement.Center
         ) {
+            Icon(
+                imageVector = Icons.Default.Refresh, contentDescription = "",
+                modifier = Modifier.align(Alignment.End).padding(8.dp)
+            )
             Text(
                 text = exerciseModel.title,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .weight(1f)
                     .padding(horizontal = 8.dp, vertical = 4.dp),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
+            )
+            Checkbox(
+                checked = isChecked.value,
+                onCheckedChange = { isChecked.value = !isChecked.value },
+                modifier = Modifier.align(Alignment.End)
             )
         }
     }

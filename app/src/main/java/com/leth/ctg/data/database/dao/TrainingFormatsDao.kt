@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.Flow
 interface TrainingFormatsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addFormat(training: TrainingFormatEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveFormats(list: List<TrainingFormatEntity>)
 
     @Query("SELECT * FROM training_formats")
