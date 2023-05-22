@@ -15,4 +15,8 @@ interface TrainingRepository {
     suspend fun fetchPreferences()
 
     suspend fun fetchTraining(setup: TrainingSetupModel): TrainingModel
+
+    suspend fun addNewTraining()
+
+    suspend fun updateTrainingDetails(training: TrainingSetupModel)
 }

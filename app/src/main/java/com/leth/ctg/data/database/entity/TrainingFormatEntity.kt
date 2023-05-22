@@ -7,8 +7,8 @@ import com.leth.ctg.utils.TrainingTag
 
 @Entity(tableName = "training_formats")
 data class TrainingFormatEntity(
-    @PrimaryKey
-    val id: String,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
     val title: String,
     val imageUrl: String?,
     val trainingTags: List<TrainingTag>,

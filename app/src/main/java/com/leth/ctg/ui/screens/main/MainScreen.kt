@@ -1,4 +1,4 @@
-package com.leth.ctg.ui.screens
+package com.leth.ctg.ui.screens.main
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.padding
@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.leth.ctg.ui.navigation.AppNavHost
@@ -18,7 +19,9 @@ import com.leth.ctg.ui.views.BottomBar
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    viewModel: MainViewModel = hiltViewModel(),
+) {
     CTGTheme {
         val navController = rememberAnimatedNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()

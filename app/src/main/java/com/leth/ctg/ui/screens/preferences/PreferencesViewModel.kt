@@ -21,10 +21,6 @@ class PreferencesViewModel @Inject constructor(
     private val trainingRepository: TrainingRepository,
 ) : ViewModel() {
 
-    init {
-        viewModelScope.launch(Dispatchers.IO) { trainingRepository.fetchPreferences() }
-    }
-
     val state = trainingRepository.preferences.map {
         PreferencesScreenState(it)
     }.stateIn(
@@ -32,4 +28,8 @@ class PreferencesViewModel @Inject constructor(
         initialValue = PreferencesScreenState(emptyList()),
         started = SharingStarted.WhileSubscribed(5_000),
     )
+
+    fun addNewTraining() = viewModelScope.launch(Dispatchers.IO) {
+        trainingRepository.addNewTraining()
+    }
 }

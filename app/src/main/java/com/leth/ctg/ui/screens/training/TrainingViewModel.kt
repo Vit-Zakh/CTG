@@ -25,7 +25,7 @@ class TrainingViewModel @Inject constructor(
             training =
             trainingRepository.fetchTraining(
                 TrainingSetupModel(
-                    id = "test_id_2",
+                    id = 2L,
                     title = "Test Title 2",
                     imageUrl = null,
                     tags = listOf(
