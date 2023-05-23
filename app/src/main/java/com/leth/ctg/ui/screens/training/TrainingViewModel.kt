@@ -39,4 +39,16 @@ class TrainingViewModel @Inject constructor(
             )
         )
     }
+
+    fun completeTraining() {
+
+    }
+
+    fun regenerateExercise() {
+
+    }
+
+    fun regenerateTraining() {
+
+    }
 }

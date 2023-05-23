@@ -17,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,16 +54,22 @@ fun PreferencesScreen(
                     onTagClick = {})
             }
         }
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            Button(
+                onClick = { viewModel.addNewTraining() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 0.dp),
+                shape = RoundedCornerShape(8.dp),
             ) {
-            Button(onClick = { viewModel.addNewTraining() },
-            modifier = Modifier.fillMaxWidth()
-                .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 0.dp)
-                .clip(RoundedCornerShape(16.dp))) {
-                Text(text = "New Training",
-                textAlign = TextAlign.Center)
+                Text(
+                    text = "New Training",
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }
