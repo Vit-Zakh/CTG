@@ -52,6 +52,7 @@ fun NavGraphBuilder.trainingsNavGraph(navController: NavHostController, modifier
                     TrainingTypes.UNKNOWN.title
                 ),
                 modifier = modifier,
+                navigation = navController,
             )
         }
     }
