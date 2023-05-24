@@ -1,5 +1,6 @@
 package com.leth.ctg.domain.repository
 
+import com.leth.ctg.domain.models.ExerciseModel
 import com.leth.ctg.domain.models.TrainingItemModel
 import com.leth.ctg.domain.models.TrainingModel
 import com.leth.ctg.domain.models.TrainingSetupModel
@@ -19,4 +20,6 @@ interface TrainingRepository {
     suspend fun addNewTraining()
 
     suspend fun updateTrainingDetails(training: TrainingSetupModel)
+
+    suspend fun regenerateExercise(exercise: ExerciseModel)
 }

@@ -146,7 +146,6 @@ class TrainingRepositoryMock @Inject constructor(
     override suspend fun addNewTraining() = trainingFormatsDao
         .addFormat(
             TrainingFormatEntity(
-//                id = "",
                 title = "",
                 imageUrl = null,
                 trainingTags = emptyList(),
@@ -157,4 +156,12 @@ class TrainingRepositoryMock @Inject constructor(
     override suspend fun updateTrainingDetails(training: TrainingSetupModel) = trainingFormatsDao.update(
         training.toEntity()
     )
+
+    override suspend fun regenerateExercise(exercise: ExerciseModel) {
+        exercisesDao.regenerateExercise(
+//            type = exercise.type,
+            category = exercise.category,
+            ignoredIds = listOf()
+        )
+    }
 }

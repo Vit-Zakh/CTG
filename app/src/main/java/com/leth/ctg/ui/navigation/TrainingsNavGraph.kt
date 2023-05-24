@@ -9,7 +9,7 @@ import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.navigation
 import com.leth.ctg.ui.screens.selection.SelectTrainingScreen
-import com.leth.ctg.ui.screens.TrainingScreen
+import com.leth.ctg.ui.screens.training.TrainingScreen
 import com.leth.ctg.utils.TrainingTypes
 
 const val TRAININGS = "trainings_graph"
@@ -52,6 +52,7 @@ fun NavGraphBuilder.trainingsNavGraph(navController: NavHostController, modifier
                     TrainingTypes.UNKNOWN.title
                 ),
                 modifier = modifier,
+                navigation = navController,
             )
         }
     }

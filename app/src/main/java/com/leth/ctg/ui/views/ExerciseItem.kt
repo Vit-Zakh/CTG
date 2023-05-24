@@ -1,6 +1,7 @@
 package com.leth.ctg.ui.views
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,6 +39,7 @@ import com.leth.ctg.ui.theme.Purple80
 @Composable
 fun ExerciseItem(
     exerciseModel: ExerciseModel,
+    regenerate: () -> Unit,
 ) {
 
     val isChecked = remember { mutableStateOf(false) }
@@ -67,7 +69,10 @@ fun ExerciseItem(
         ) {
             Icon(
                 imageVector = Icons.Default.Refresh, contentDescription = "",
-                modifier = Modifier.align(Alignment.End).padding(8.dp)
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(8.dp)
+                    .clickable { regenerate.invoke() }
             )
             Text(
                 text = exerciseModel.title,
