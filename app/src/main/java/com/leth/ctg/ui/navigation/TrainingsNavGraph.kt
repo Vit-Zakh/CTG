@@ -13,19 +13,20 @@ import com.leth.ctg.ui.screens.training.TrainingScreen
 import com.leth.ctg.utils.TrainingTypes
 
 const val TRAININGS = "trainings_graph"
-const val KEY_TRAINING_TYPE = "training_type"
+//const val KEY_TRAINING_TYPE = "training_type"
+const val KEY_TRAINING_ID = "training_id"
 
-fun getTrainingScreenPath(trainingType: String?): String =
-    if (!trainingType.isNullOrBlank()) {
-        "training_screen/$trainingType"
+fun getTrainingScreenPath(trainingId: Long?): String =
+    if (trainingId != null) {
+        "training_screen/$trainingId"
     } else {
-        "training_screen/${TrainingTypes.UNKNOWN.title}"
+        "training_screen/${-1L}"
     }
 
 sealed class TrainingScreen(val route: String) {
     object Select : TrainingScreen(route = "select_training_screen")
     object Training :
-        TrainingScreen(route = "training_screen/{${KEY_TRAINING_TYPE}}")
+        TrainingScreen(route = "training_screen/{${KEY_TRAINING_ID}}")
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -42,14 +43,23 @@ fun NavGraphBuilder.trainingsNavGraph(navController: NavHostController, modifier
         }
         composable(
             route = TrainingScreen.Training.route,
-            arguments = listOf(navArgument(KEY_TRAINING_TYPE) {
-                type = NavType.StringType
-            })
+            arguments = listOf(
+//                navArgument(KEY_TRAINING_TYPE) {
+//                type = NavType.StringType
+//            },
+                navArgument(KEY_TRAINING_ID) {
+                    type = NavType.LongType
+                },
+            )
         ) { backStackEntry ->
             TrainingScreen(
-                trainingType = backStackEntry.arguments?.getString(
-                    KEY_TRAINING_TYPE,
-                    TrainingTypes.UNKNOWN.title
+//                trainingType = backStackEntry.arguments?.getString(
+//                    KEY_TRAINING_TYPE,
+//                    TrainingTypes.UNKNOWN.title
+//                ),
+                trainingId = backStackEntry.arguments?.getLong(
+                    KEY_TRAINING_ID,
+                    -1L
                 ),
                 modifier = modifier,
                 navigation = navController,

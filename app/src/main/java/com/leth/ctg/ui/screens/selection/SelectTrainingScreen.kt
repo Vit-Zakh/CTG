@@ -66,7 +66,7 @@ fun SelectTrainingScreen(
                     modifier = Modifier
                         .padding(if (index == 1) PaddingValues(top = 48.dp) else PaddingValues())
                         .aspectRatio(9 / 13f)
-                        .clickable { navigation.navigate(getTrainingScreenPath(item.title)) }
+                        .clickable { navigation.navigate(getTrainingScreenPath(item.id)) }
                 )
             }
         }
