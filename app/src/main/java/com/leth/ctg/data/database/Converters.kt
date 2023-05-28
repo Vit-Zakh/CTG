@@ -5,6 +5,7 @@ import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.leth.ctg.data.database.entity.ExerciseEntity
+import com.leth.ctg.domain.models.ExercisesSetPattern
 import com.leth.ctg.utils.ExerciseClass
 import com.leth.ctg.utils.TrainingType
 import java.lang.reflect.Type
@@ -40,6 +41,14 @@ class Converters(private val gson: Gson) {
     @TypeConverter
     fun fromExerciseEntities(value: List<ExerciseEntity>): String =
         gson.toJson(value, gsonList<ExerciseEntity>())
+
+    @TypeConverter
+    fun toExercisesSetPattern(string: String): List<ExercisesSetPattern> =
+        gson.fromJson(string, gsonList<ExercisesSetPattern>())
+
+    @TypeConverter
+    fun fromExercisesSetPattern(value: List<ExercisesSetPattern>): String =
+        gson.toJson(value, gsonList<ExercisesSetPattern>())
 
 }
 

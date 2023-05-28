@@ -7,6 +7,7 @@ import com.leth.ctg.DATABASE_NAME
 import com.leth.ctg.data.database.Converters
 import com.leth.ctg.data.database.TrainingsDatabase
 import com.leth.ctg.data.database.dao.ExercisesDao
+import com.leth.ctg.data.database.dao.PatternsDao
 import com.leth.ctg.data.database.dao.TrainingFormatsDao
 import com.leth.ctg.data.database.dao.TrainingsDao
 import com.leth.ctg.data.repository.TrainingRepositoryMock
@@ -59,9 +60,15 @@ object RepositoryModule {
 
     @Provides
     @Singleton
+    fun providePatternsDao(database: TrainingsDatabase): PatternsDao =
+        database.patternsDao()
+
+    @Provides
+    @Singleton
     fun provideTrainingsRepository(
         trainingFormatsDao: TrainingFormatsDao,
         exercisesDao: ExercisesDao,
         trainingsDao: TrainingsDao,
-    ): TrainingRepository = TrainingRepositoryMock(trainingFormatsDao, exercisesDao, trainingsDao)
+        patternsDao: PatternsDao,
+    ): TrainingRepository = TrainingRepositoryMock(trainingFormatsDao, exercisesDao, trainingsDao, patternsDao)
 }

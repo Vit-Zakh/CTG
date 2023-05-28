@@ -26,10 +26,11 @@ interface ExercisesDao {
         ignoredIds: List<Long>,
     ): ExerciseEntity
 
-    @Query("SELECT * FROM exercises WHERE type = :type AND category = :category ORDER BY RANDOM() LIMIT :amount")
+    @Query("SELECT * FROM exercises WHERE type = :type AND category = :category AND id NOT IN (:ignoredIds) ORDER BY RANDOM() LIMIT :amount")
     suspend fun generateExercises(
         type: TrainingType,
         category: ExerciseClass,
         amount: Int,
+        ignoredIds: List<Long>,
     ): List<ExerciseEntity>
 }

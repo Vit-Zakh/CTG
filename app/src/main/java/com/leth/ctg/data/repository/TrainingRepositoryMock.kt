@@ -1,9 +1,11 @@
 package com.leth.ctg.data.repository
 
 import com.leth.ctg.data.database.dao.ExercisesDao
+import com.leth.ctg.data.database.dao.PatternsDao
 import com.leth.ctg.data.database.dao.TrainingFormatsDao
 import com.leth.ctg.data.database.dao.TrainingsDao
 import com.leth.ctg.data.database.entity.ExerciseEntity
+import com.leth.ctg.data.database.entity.PatternEntity
 import com.leth.ctg.data.database.entity.TrainingEntity
 import com.leth.ctg.data.database.entity.TrainingFormatEntity
 import com.leth.ctg.data.database.entity.toDomain
@@ -24,6 +26,7 @@ class TrainingRepositoryMock @Inject constructor(
     private val trainingFormatsDao: TrainingFormatsDao,
     private val exercisesDao: ExercisesDao,
     private val trainingsDao: TrainingsDao,
+    private val patternsDao: PatternsDao,
 ) : TrainingRepository {
 
     override val trainings: Flow<List<TrainingModel>> = trainingsDao.fetchTrainings().map { list ->
@@ -89,14 +92,16 @@ class TrainingRepositoryMock @Inject constructor(
     override suspend fun fetchTrainings() {
         trainingFormatsDao.fetchEnabledFormats().map { preference ->
             val trainingsList = mutableListOf<TrainingEntity>()
-            val generatedPattern = generateTrainingPattern(preference)
+            val patternId = generateTrainingPattern(preference)
+            val generatedPattern = patternsDao.fetchPattern(patternId)
             val exercisesList = mutableListOf<ExerciseEntity>()
-            generatedPattern.forEach { pattern ->
+            generatedPattern.list.forEach { pattern ->
                 exercisesList.addAll(
                     exercisesDao.generateExercises(
                         type = pattern.type,
                         category = pattern.category,
                         amount = pattern.amount,
+                        ignoredIds = listOf()
                     )
                 )
                 trainingsList.add(
@@ -104,7 +109,8 @@ class TrainingRepositoryMock @Inject constructor(
                         id = preference.id,
                         title = preference.title,
                         imageUrl = preference.imageUrl,
-                        exercises = exercisesList
+                        exercises = exercisesList,
+                        templateId = patternId,
                     )
                 )
             }
@@ -148,8 +154,29 @@ class TrainingRepositoryMock @Inject constructor(
         trainingsDao.updateExercisesList(training.id, exercisesList.map { it.toEntity() })
     }
 
+    override suspend fun regenerateTraining(training: TrainingModel) {
+        val patternId = trainingsDao.fetchTraining(training.id).templateId
+        val pattern = patternsDao.fetchPattern(patternId)
 
-    override fun generateTrainingPattern(setup: TrainingFormatEntity): List<ExercisesSetPattern> {
+        val idsToIgnore = training.exercises.map { it.id }
+
+        val exercisesList = mutableListOf<ExerciseEntity>()
+
+        pattern.list.forEach { exercisePattern ->
+            exercisesList.addAll(
+                exercisesDao.generateExercises(
+                    type = exercisePattern.type,
+                    category = exercisePattern.category,
+                    amount = exercisePattern.amount,
+                    ignoredIds = idsToIgnore,
+                )
+            )
+        }
+        trainingsDao.updateExercisesList(training.id, exercisesList)
+    }
+
+
+    override suspend fun generateTrainingPattern(setup: TrainingFormatEntity): Long {
         val pattern = mutableListOf<ExercisesSetPattern>()
         with(setup.trainingTypes) {
             val includesStretching = contains(TrainingType.STRETCHING)
@@ -184,7 +211,8 @@ class TrainingRepositoryMock @Inject constructor(
                 ),
             )
         )
-        return pattern
+        return patternsDao.savePattern(PatternEntity(list = pattern))
+//        return pattern
     }
 }
 
@@ -289,6 +317,54 @@ val exercisesMockList = listOf(
         id = 12317L,
         title = "Triceps pushdown 2",
         type = TrainingType.ARMS,
+        category = ExerciseClass.AUXILIARY
+    ),
+    ExerciseModel(
+        id = 12318L,
+        title = "Bicep Curl 3",
+        type = TrainingType.ARMS,
+        category = ExerciseClass.PRIMARY
+    ),
+    ExerciseModel(
+        id = 12319L,
+        title = "Triceps pushdown 3",
+        type = TrainingType.ARMS,
+        category = ExerciseClass.PRIMARY
+    ),
+    ExerciseModel(
+        id = 12320L,
+        title = "Bicep Curl 4",
+        type = TrainingType.ARMS,
+        category = ExerciseClass.AUXILIARY
+    ),
+    ExerciseModel(
+        id = 12321L,
+        title = "Triceps pushdown 4",
+        type = TrainingType.ARMS,
+        category = ExerciseClass.AUXILIARY
+    ),
+    ExerciseModel(
+        id = 12322L,
+        title = "Lat Pulldown 5",
+        type = TrainingType.BACK,
+        category = ExerciseClass.PRIMARY
+    ),
+    ExerciseModel(
+        id = 12323L,
+        title = "Lat Pulldown 6",
+        type = TrainingType.BACK,
+        category = ExerciseClass.PRIMARY
+    ),
+    ExerciseModel(
+        id = 12324L,
+        title = "Lat Pulldown 7",
+        type = TrainingType.BACK,
+        category = ExerciseClass.AUXILIARY
+    ),
+    ExerciseModel(
+        id = 12325L,
+        title = "Lat Pulldown 8",
+        type = TrainingType.BACK,
         category = ExerciseClass.AUXILIARY
     ),
 )
