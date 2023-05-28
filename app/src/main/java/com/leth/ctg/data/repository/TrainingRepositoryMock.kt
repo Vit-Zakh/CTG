@@ -117,6 +117,9 @@ class TrainingRepositoryMock @Inject constructor(
         return trainingsDao.fetchTraining(id).toDomain()
     }
 
+    override fun fetchExercisesForTraining(trainingId: Long): Flow<TrainingModel> =
+        trainingsDao.fetchTrainingFlow(trainingId).map { it.toDomain() }
+
     override suspend fun addNewTraining() = trainingFormatsDao
         .addFormat(
             TrainingFormatEntity(
@@ -132,13 +135,19 @@ class TrainingRepositoryMock @Inject constructor(
             training.toEntity()
         )
 
-    override suspend fun regenerateExercise(exercise: ExerciseModel) {
-        exercisesDao.regenerateExercise(
+    override suspend fun regenerateExercise(exercise: ExerciseModel, training: TrainingModel) {
+        val exercisesList = training.exercises.toMutableList()
+        val idsToIgnore = exercisesList.map { it.id }
+        val newExercise = exercisesDao.regenerateExercise(
             type = exercise.type,
             category = exercise.category,
-            ignoredIds = listOf()
+            ignoredIds = idsToIgnore,
         )
+        val indexToReplace = exercisesList.indexOfFirst { it.id == exercise.id }
+        exercisesList[indexToReplace] = newExercise.toDomain()
+        trainingsDao.updateExercisesList(training.id, exercisesList.map { it.toEntity() })
     }
+
 
     override fun generateTrainingPattern(setup: TrainingFormatEntity): List<ExercisesSetPattern> {
         val pattern = mutableListOf<ExercisesSetPattern>()

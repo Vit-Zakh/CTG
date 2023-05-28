@@ -1,8 +1,10 @@
 package com.leth.ctg.ui.screens.training
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,12 +17,15 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -42,7 +47,9 @@ fun TrainingScreen(
 
     val state = viewModel.state.collectAsState()
 
-    viewModel.fetchTraining(trainingId ?: -1)
+    LaunchedEffect(key1 = viewModel) {
+        viewModel.fetchTraining(trainingId ?: -1)
+    }
 
     Column(
         modifier = modifier
@@ -65,15 +72,19 @@ fun TrainingScreen(
                 }
             },
         )
-
-        Text(
-//        text = "$trainingType",
-            text = "${state.value.training?.exercises?.size} exercises",
-            modifier = Modifier.height(42.dp)
-        )
-        if (state.value.training == null) {
-            // render error
+        if (state.value.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .weight(1f)
+                    .align(Alignment.CenterHorizontally)
+            )
         } else {
+            Text(
+//        text = "$trainingType",
+                text = "${state.value.training?.exercises?.size} exercises",
+                modifier = Modifier.height(42.dp)
+            )
+            Log.d("VZ_TAG", "rendering list: ")
             state.value.training?.exercises?.let { exercises ->
                 LazyColumn(
                     modifier = Modifier
@@ -85,7 +96,8 @@ fun TrainingScreen(
                     items(exercises) {
                         ExerciseItem(
                             exerciseModel = it,
-                            regenerate = viewModel::regenerateExercise
+                            regenerate = { viewModel.regenerateExercise(it) },
+                            isTrainingActive = state.value.isActive,
                         )
                     }
                 }
@@ -97,35 +109,39 @@ fun TrainingScreen(
 //            .wrapContentHeight()
         ) {
             Button(
-                onClick = { viewModel.completeTraining() },
+                onClick = {
+                    if (state.value.isActive) viewModel.completeTraining() else
+                        viewModel.startTraining()
+                },
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 0.dp)
             ) {
                 Text(
-                    text = "Complete training",
+                    text = if (state.value.isActive) "Complete training" else "Start training",
                     textAlign = TextAlign.Center,
                     fontSize = 24.sp
                 )
             }
-
-            TransparentButton(
-                onClick = { viewModel.regenerateTraining() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 0.dp),
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Refresh, contentDescription = "",
+            if (!state.value.isActive) {
+                TransparentButton(
+                    onClick = { viewModel.regenerateTraining() },
                     modifier = Modifier
-                        .padding(8.dp)
-                )
-                Text(
-                    text = "Regenerate training",
-                    textAlign = TextAlign.Center,
-                    fontSize = 16.sp
-                )
+                        .fillMaxWidth()
+                        .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 0.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Refresh, contentDescription = "",
+                        modifier = Modifier
+                            .padding(8.dp)
+                    )
+                    Text(
+                        text = "Regenerate training",
+                        textAlign = TextAlign.Center,
+                        fontSize = 16.sp
+                    )
+                }
             }
         }
     }

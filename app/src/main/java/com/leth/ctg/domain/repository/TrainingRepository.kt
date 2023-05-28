@@ -13,6 +13,8 @@ interface TrainingRepository {
 
     val preferences: Flow<List<TrainingSetupModel>>
 
+    fun fetchExercisesForTraining(trainingId: Long): Flow<TrainingModel>
+
     suspend fun fetchPreferences()
 
     suspend fun fetchTrainings()
@@ -25,7 +27,7 @@ interface TrainingRepository {
 
     suspend fun updateTrainingDetails(training: TrainingSetupModel)
 
-    suspend fun regenerateExercise(exercise: ExerciseModel)
+    suspend fun regenerateExercise(exercise: ExerciseModel, training: TrainingModel)
 
     fun generateTrainingPattern(setup: TrainingFormatEntity): List<ExercisesSetPattern>
 }

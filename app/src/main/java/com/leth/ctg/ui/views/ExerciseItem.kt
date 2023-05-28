@@ -3,6 +3,7 @@ package com.leth.ctg.ui.views
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -24,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -40,6 +40,7 @@ import com.leth.ctg.ui.theme.Purple80
 fun ExerciseItem(
     exerciseModel: ExerciseModel,
     regenerate: () -> Unit,
+    isTrainingActive: Boolean
 ) {
 
     val isChecked = remember { mutableStateOf(false) }
@@ -61,34 +62,38 @@ fun ExerciseItem(
             alignment = Alignment.BottomStart,
             contentScale = ContentScale.Crop
         )
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxHeight()
                 .background(color = Purple80),
-            verticalArrangement = Arrangement.Center
+//            verticalArrangement = Arrangement.Center
         ) {
-            Icon(
-                imageVector = Icons.Default.Refresh, contentDescription = "",
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(8.dp)
-                    .clickable { regenerate.invoke() }
-            )
+            if (!isTrainingActive) {
+                Icon(
+                    imageVector = Icons.Default.Refresh, contentDescription = "",
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(8.dp)
+                        .clickable { regenerate.invoke() }
+                )
+            }
             Text(
                 text = exerciseModel.title,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
+                    .align(Alignment.Center)
                     .padding(horizontal = 8.dp, vertical = 4.dp),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
             )
-            Checkbox(
-                checked = isChecked.value,
-                onCheckedChange = { isChecked.value = !isChecked.value },
-                modifier = Modifier.align(Alignment.End)
-            )
+            if (isTrainingActive) {
+                Checkbox(
+                    checked = isChecked.value,
+                    onCheckedChange = { isChecked.value = !isChecked.value },
+                    modifier = Modifier.align(Alignment.BottomEnd)
+                )
+            }
         }
     }
 }
