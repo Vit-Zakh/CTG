@@ -17,13 +17,14 @@ interface TrainingFormatsDao {
     fun fetchAllFormats(): Flow<List<TrainingFormatEntity>>
 
     @Query("SELECT * FROM training_formats WHERE isEnabled = 1")
-    fun fetchEnabledFormats(): Flow<List<TrainingFormatEntity>>
+    fun fetchEnabledFormatsFlow(): Flow<List<TrainingFormatEntity>>
+
+    @Query("SELECT * FROM training_formats WHERE isEnabled = 1")
+    suspend fun fetchEnabledFormats(): List<TrainingFormatEntity>
 
     @Update
     suspend fun update(format: TrainingFormatEntity)
 
-    @Query(
-        "UPDATE training_formats SET isEnabled = 1 WHERE id = :id"
-    )
+    @Query("UPDATE training_formats SET isEnabled = 1 WHERE id = :id")
     suspend fun changeFormatActivity(id: String)
 }

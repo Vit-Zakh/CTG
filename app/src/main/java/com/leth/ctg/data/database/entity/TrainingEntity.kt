@@ -2,23 +2,24 @@ package com.leth.ctg.data.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.leth.ctg.domain.models.ExerciseModel
+import com.leth.ctg.domain.models.TrainingModel
 import com.leth.ctg.domain.models.TrainingSetupModel
 import com.leth.ctg.utils.TrainingType
 
-@Entity(tableName = "training_formats")
-data class TrainingFormatEntity(
+@Entity(tableName = "trainings")
+data class TrainingEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val title: String,
     val imageUrl: String?,
-    val trainingTypes: List<TrainingType>,
-    val isEnabled: Boolean = false,
+    val exercises: List<ExerciseEntity>,
+    val templateId: Long,
 )
 
-fun TrainingFormatEntity.toDomain() = TrainingSetupModel(
+fun TrainingEntity.toDomain() = TrainingModel(
     id = id,
     title = title,
     imageUrl = imageUrl,
-    tags = trainingTypes,
-    isEnabled = isEnabled,
+    exercises = exercises.map { it.toDomain() }
 )

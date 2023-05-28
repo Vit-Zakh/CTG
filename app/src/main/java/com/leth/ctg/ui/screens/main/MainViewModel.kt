@@ -14,6 +14,10 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     init {
-        viewModelScope.launch(Dispatchers.IO) { trainingRepository.fetchPreferences() }
+        viewModelScope.launch(Dispatchers.IO) {
+            trainingRepository.fetchExercises()
+            trainingRepository.fetchPreferences()
+            trainingRepository.fetchTrainings()
+        }
     }
 }

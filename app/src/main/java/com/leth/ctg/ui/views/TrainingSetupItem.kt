@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -28,10 +27,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,13 +37,13 @@ import com.leth.ctg.R
 import com.leth.ctg.domain.models.TrainingSetupModel
 import com.leth.ctg.ui.theme.CTGTheme
 import com.leth.ctg.ui.theme.Purple80
-import com.leth.ctg.utils.TrainingTag
+import com.leth.ctg.utils.TrainingType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrainingSetupItem(
     training: TrainingSetupModel,
-    onTagClick: (TrainingTag) -> Unit,
+    onTagClick: (TrainingType) -> Unit,
 ) {
 
     val isChecked = remember { mutableStateOf(training.isEnabled) }
@@ -102,7 +99,7 @@ fun TrainingSetupItem(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                items(TrainingTag.values()) {
+                items(TrainingType.values()) {
                     Text(
                         text = it.name.lowercase().replaceFirstChar { it.uppercaseChar() },
                         textAlign = TextAlign.Center,

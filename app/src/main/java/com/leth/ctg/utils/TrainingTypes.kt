@@ -8,7 +8,7 @@ enum class TrainingTypes(val title: String) {
     TYPE_CROSSFIT("type_crossfit"),
 }
 
-enum class TrainingTag {
+enum class TrainingType {
     CHEST,
     BACK,
     ARMS,
@@ -17,4 +17,9 @@ enum class TrainingTag {
     CROSSFIT,
     STRETCHING,
     SURPRISE,
+}
+
+enum class ExerciseClass {
+    PRIMARY,
+    AUXILIARY,
 }
