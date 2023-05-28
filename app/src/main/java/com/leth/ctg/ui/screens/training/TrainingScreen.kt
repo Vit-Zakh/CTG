@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,6 +26,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -34,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.leth.ctg.ui.views.ExerciseItem
+import com.leth.ctg.ui.views.TrainingProgressBar
 import com.leth.ctg.ui.views.TransparentButton
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -98,6 +102,7 @@ fun TrainingScreen(
                             exerciseModel = it,
                             regenerate = { viewModel.regenerateExercise(it) },
                             isTrainingActive = state.value.isActive,
+                            completeExercise = { viewModel.completeExercise(it.id) }
                         )
                     }
                 }
@@ -129,6 +134,7 @@ fun TrainingScreen(
                     onClick = { viewModel.regenerateTraining() },
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(ButtonDefaults.MinHeight * 1.5f)
                         .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 0.dp),
                 ) {
                     Icon(
@@ -142,6 +148,14 @@ fun TrainingScreen(
                         fontSize = 16.sp
                     )
                 }
+            } else {
+                TrainingProgressBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(ButtonDefaults.MinHeight * 1.5f)
+                        .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
+                    progress = state.value.completionProgress
+                )
             }
         }
     }

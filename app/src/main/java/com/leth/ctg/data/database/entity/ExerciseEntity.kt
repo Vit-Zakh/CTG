@@ -22,4 +22,5 @@ fun ExerciseEntity.toDomain() = ExerciseModel(
     type = type,
     title = title,
     category = category,
+    isCompleted = wasLastTime,
 )

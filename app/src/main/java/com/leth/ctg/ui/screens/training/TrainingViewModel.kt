@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.leth.ctg.domain.models.ExerciseModel
-import com.leth.ctg.domain.models.TrainingModel
 import com.leth.ctg.domain.repository.TrainingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -25,13 +24,13 @@ class TrainingViewModel @Inject constructor(
     val state = _state
 
     fun fetchTraining(id: Long) = viewModelScope.launch {
-        Log.d("VZ_TAG", "fetchTraining called")
         _state.value = _state.value.copy(isLoading = true)
         delay(300)
         trainingRepository.fetchExercisesForTraining(id).map {
             _state.value = _state.value.copy(
                 isLoading = false,
-                training = it.copy()
+                training = it,
+                completionProgress = calculateCompletionProgress(it.exercises)
             )
         }.launchIn(this)
     }
@@ -50,6 +49,22 @@ class TrainingViewModel @Inject constructor(
         )
     }
 
+    fun completeExercise(exerciseId: Long) = viewModelScope.launch(Dispatchers.IO) {
+        trainingRepository.completeExercise(exerciseId)
+        val updatedExercisesList = _state.value.training?.exercises?.toMutableList()
+        updatedExercisesList?.let { list ->
+            val indexToUpdate = list.indexOfFirst { it.id == exerciseId }
+            val valueToUpdate = !list[indexToUpdate].isCompleted
+            val exerciseToUpdate = list[indexToUpdate].copy(isCompleted = valueToUpdate)
+            updatedExercisesList[indexToUpdate] = exerciseToUpdate
+            val updatedTraining = _state.value.training?.copy(exercises = updatedExercisesList)
+            _state.value = _state.value.copy(
+                training = updatedTraining,
+                completionProgress = calculateCompletionProgress(updatedExercisesList)
+            )
+        }
+    }
+
     fun regenerateExercise(exercise: ExerciseModel) =
         state.value.training?.let { training ->
             viewModelScope.launch(Dispatchers.IO) {
@@ -61,5 +76,11 @@ class TrainingViewModel @Inject constructor(
         viewModelScope.launch {
             trainingRepository.regenerateTraining(training)
         }
+    }
+
+    private fun calculateCompletionProgress(exercises: List<ExerciseModel>): Float {
+        val listSize = exercises.size
+        val completedListSize = exercises.filter { it.isCompleted }.size
+        return completedListSize.toFloat() / listSize.toFloat()
     }
 }

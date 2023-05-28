@@ -40,7 +40,8 @@ import com.leth.ctg.ui.theme.Purple80
 fun ExerciseItem(
     exerciseModel: ExerciseModel,
     regenerate: () -> Unit,
-    isTrainingActive: Boolean
+    isTrainingActive: Boolean,
+    completeExercise: () -> Unit,
 ) {
 
     val isChecked = remember { mutableStateOf(false) }
@@ -89,8 +90,8 @@ fun ExerciseItem(
             )
             if (isTrainingActive) {
                 Checkbox(
-                    checked = isChecked.value,
-                    onCheckedChange = { isChecked.value = !isChecked.value },
+                    checked = exerciseModel.isCompleted,
+                    onCheckedChange = { completeExercise() },
                     modifier = Modifier.align(Alignment.BottomEnd)
                 )
             }

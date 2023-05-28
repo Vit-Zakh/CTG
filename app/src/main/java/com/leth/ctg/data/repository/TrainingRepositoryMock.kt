@@ -214,6 +214,9 @@ class TrainingRepositoryMock @Inject constructor(
         return patternsDao.savePattern(PatternEntity(list = pattern))
 //        return pattern
     }
+
+    override suspend fun completeExercise(exerciseId: Long) =
+        exercisesDao.completeExercise(exerciseId)
 }
 
 val exercisesMockList = listOf(
@@ -221,150 +224,175 @@ val exercisesMockList = listOf(
         id = 1231L,
         title = "Incline Bench Press 1",
         type = TrainingType.CHEST,
-        category = ExerciseClass.PRIMARY
+        category = ExerciseClass.PRIMARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 1232L,
         title = "Bench Press 1",
         type = TrainingType.CHEST,
-        category = ExerciseClass.PRIMARY
+        category = ExerciseClass.PRIMARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 1233L,
         title = "Chest Fly 1",
         type = TrainingType.CHEST,
-        category = ExerciseClass.PRIMARY
+        category = ExerciseClass.PRIMARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 1234L,
         title = "Incline Bench Press 2",
         type = TrainingType.CHEST,
-        category = ExerciseClass.AUXILIARY
+        category = ExerciseClass.AUXILIARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 1235L,
         title = "Bench Press 2",
         type = TrainingType.CHEST,
-        category = ExerciseClass.AUXILIARY
+        category = ExerciseClass.AUXILIARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 1236L,
         title = "Chest Fly 2",
         type = TrainingType.CHEST,
-        category = ExerciseClass.AUXILIARY
+        category = ExerciseClass.AUXILIARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 1237L,
         title = "Incline Bench Press 3",
         type = TrainingType.CHEST,
-        category = ExerciseClass.AUXILIARY
+        category = ExerciseClass.AUXILIARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 1238L,
         title = "Bench Press 3",
         type = TrainingType.CHEST,
-        category = ExerciseClass.PRIMARY
+        category = ExerciseClass.PRIMARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 1239L,
         title = "Chest Fly 3",
         type = TrainingType.CHEST,
-        category = ExerciseClass.PRIMARY
+        category = ExerciseClass.PRIMARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 12310L,
         title = "Lat Pulldown 1",
         type = TrainingType.BACK,
-        category = ExerciseClass.PRIMARY
+        category = ExerciseClass.PRIMARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 12311L,
         title = "Lat Pulldown 2",
         type = TrainingType.BACK,
-        category = ExerciseClass.PRIMARY
+        category = ExerciseClass.PRIMARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 12312L,
         title = "Lat Pulldown 3",
         type = TrainingType.BACK,
-        category = ExerciseClass.AUXILIARY
+        category = ExerciseClass.AUXILIARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 12313L,
         title = "Lat Pulldown 4",
         type = TrainingType.BACK,
-        category = ExerciseClass.AUXILIARY
+        category = ExerciseClass.AUXILIARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 12314L,
         title = "Bicep Curl 1",
         type = TrainingType.ARMS,
-        category = ExerciseClass.PRIMARY
+        category = ExerciseClass.PRIMARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 12315L,
         title = "Triceps pushdown 1",
         type = TrainingType.ARMS,
-        category = ExerciseClass.PRIMARY
+        category = ExerciseClass.PRIMARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 12316L,
         title = "Bicep Curl 2",
         type = TrainingType.ARMS,
-        category = ExerciseClass.AUXILIARY
+        category = ExerciseClass.AUXILIARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 12317L,
         title = "Triceps pushdown 2",
         type = TrainingType.ARMS,
-        category = ExerciseClass.AUXILIARY
+        category = ExerciseClass.AUXILIARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 12318L,
         title = "Bicep Curl 3",
         type = TrainingType.ARMS,
-        category = ExerciseClass.PRIMARY
+        category = ExerciseClass.PRIMARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 12319L,
         title = "Triceps pushdown 3",
         type = TrainingType.ARMS,
-        category = ExerciseClass.PRIMARY
+        category = ExerciseClass.PRIMARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 12320L,
         title = "Bicep Curl 4",
         type = TrainingType.ARMS,
-        category = ExerciseClass.AUXILIARY
+        category = ExerciseClass.AUXILIARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 12321L,
         title = "Triceps pushdown 4",
         type = TrainingType.ARMS,
-        category = ExerciseClass.AUXILIARY
+        category = ExerciseClass.AUXILIARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 12322L,
         title = "Lat Pulldown 5",
         type = TrainingType.BACK,
-        category = ExerciseClass.PRIMARY
+        category = ExerciseClass.PRIMARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 12323L,
         title = "Lat Pulldown 6",
         type = TrainingType.BACK,
-        category = ExerciseClass.PRIMARY
+        category = ExerciseClass.PRIMARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 12324L,
         title = "Lat Pulldown 7",
         type = TrainingType.BACK,
-        category = ExerciseClass.AUXILIARY
+        category = ExerciseClass.AUXILIARY,
+        isCompleted = false,
     ),
     ExerciseModel(
         id = 12325L,
         title = "Lat Pulldown 8",
         type = TrainingType.BACK,
-        category = ExerciseClass.AUXILIARY
+        category = ExerciseClass.AUXILIARY,
+        isCompleted = false,
     ),
 )

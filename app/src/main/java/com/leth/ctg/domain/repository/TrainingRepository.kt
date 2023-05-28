@@ -32,4 +32,6 @@ interface TrainingRepository {
     suspend fun regenerateTraining(training: TrainingModel)
 
     suspend fun generateTrainingPattern(setup: TrainingFormatEntity): Long
+
+    suspend fun completeExercise(exerciseId: Long)
 }

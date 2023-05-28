@@ -33,4 +33,7 @@ interface ExercisesDao {
         amount: Int,
         ignoredIds: List<Long>,
     ): List<ExerciseEntity>
+
+    @Query("UPDATE exercises SET wasLastTime = 1 WHERE id = :id")
+    suspend fun completeExercise(id: Long)
 }

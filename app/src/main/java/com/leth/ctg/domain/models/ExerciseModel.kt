@@ -9,6 +9,7 @@ data class ExerciseModel(
     val type: TrainingType,
     val title: String,
     val category: ExerciseClass,
+    val isCompleted: Boolean,
 )
 
 fun ExerciseModel.toEntity() = ExerciseEntity(
@@ -16,4 +17,5 @@ fun ExerciseModel.toEntity() = ExerciseEntity(
     type = type,
     title = title,
     category = category,
+    wasLastTime = isCompleted,
 )
