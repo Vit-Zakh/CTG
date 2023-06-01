@@ -26,4 +26,7 @@ interface TrainingsDao {
     @Query("UPDATE trainings SET exercises = :exercises WHERE id = :id")
     suspend fun updateExercisesList(id: Long, exercises: List<ExerciseEntity>)
 
+    @Query("DELETE FROM trainings")
+    suspend fun deleteTrainings()
+
 }

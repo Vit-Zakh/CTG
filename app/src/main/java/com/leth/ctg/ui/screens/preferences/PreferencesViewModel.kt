@@ -5,7 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.leth.ctg.domain.models.TrainingSetupModel
 import com.leth.ctg.domain.repository.TrainingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -21,6 +24,8 @@ class PreferencesViewModel @Inject constructor(
     private val trainingRepository: TrainingRepository,
 ) : ViewModel() {
 
+    private var delayedJobForTrainingUpdate: Job? = null
+
     val state = trainingRepository.preferences.map {
         PreferencesScreenState(it)
     }.stateIn(
@@ -31,5 +36,17 @@ class PreferencesViewModel @Inject constructor(
 
     fun addNewTraining() = viewModelScope.launch(Dispatchers.IO) {
         trainingRepository.addNewTraining()
+    }
+
+    fun updateTraining(training: TrainingSetupModel) = viewModelScope.launch(Dispatchers.IO) {
+        trainingRepository.updateTrainingDetails(training)
+    }
+
+    fun updateTrainingWithDelay(training: TrainingSetupModel) {
+        delayedJobForTrainingUpdate?.cancel()
+        delayedJobForTrainingUpdate = viewModelScope.launch(Dispatchers.IO) {
+            delay(300L)
+            trainingRepository.updateTrainingDetails(training)
+        }
     }
 }

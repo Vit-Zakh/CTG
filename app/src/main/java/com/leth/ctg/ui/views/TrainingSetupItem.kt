@@ -1,5 +1,6 @@
 package com.leth.ctg.ui.views
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,10 +18,14 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,13 +49,12 @@ import com.leth.ctg.utils.TrainingType
 @Composable
 fun TrainingSetupItem(
     training: TrainingSetupModel,
-    onTagClick: (TrainingType) -> Unit,
+    onTagClick: (TrainingSetupModel) -> Unit,
+    delayedTrainingUpdate: (TrainingSetupModel) -> Unit,
 ) {
 
-    val isChecked = remember { mutableStateOf(training.isEnabled) }
     val selectedTags = remember { mutableStateOf(training.tags) }
     val titleValue = remember { mutableStateOf(training.title) }
-
 
     Row(
         modifier = Modifier
@@ -76,20 +81,18 @@ fun TrainingSetupItem(
         ) {
             TextField(
                 value = titleValue.value,
-                onValueChange = { titleValue.value = it },
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color.Transparent,
+                ),
+                onValueChange = {
+                    titleValue.value = it
+                    delayedTrainingUpdate.invoke(training.copy(title = it))
+                },
                 placeholder = { if (titleValue.value.isEmpty()) Text(text = "Training Title") },
                 singleLine = true,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             )
-//            Text(
-//                text = training.title,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(horizontal = 8.dp, vertical = 4.dp),
-//                textAlign = TextAlign.Center,
-//            )
-//        }
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier
@@ -111,13 +114,13 @@ fun TrainingSetupItem(
                             )
                             .padding(horizontal = 8.dp)
                             .clickable {
-                                onTagClick.invoke(it)
                                 selectedTags.value
                                     .toMutableList()
                                     .also { list ->
                                         if (list.contains(it)) list.remove(it) else list.add(it)
                                         selectedTags.value = list
                                     }
+                                onTagClick.invoke(training.copy(tags = selectedTags.value))
                             }
                     )
                 }
@@ -127,10 +130,13 @@ fun TrainingSetupItem(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(text = if (isChecked.value) "Enabled" else "Click to enable")
+                Text(text = if (training.isEnabled) "Enabled" else "Click to enable")
                 Checkbox(
-                    checked = isChecked.value,
-                    onCheckedChange = { isChecked.value = !isChecked.value },
+                    checked = training.isEnabled,
+                    onCheckedChange = {
+                        val updatedValue = !training.isEnabled
+                        onTagClick.invoke(training.copy(isEnabled = updatedValue))
+                    },
                 )
             }
         }
@@ -148,7 +154,8 @@ fun TrainingSetupItemPreview() {
                 imageUrl = null,
                 tags = emptyList(),
                 isEnabled = false,
-            )
+            ),
+            {}
         )
         {}
     }

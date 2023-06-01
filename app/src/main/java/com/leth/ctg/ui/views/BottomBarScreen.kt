@@ -16,7 +16,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.leth.ctg.R
-import com.leth.ctg.ui.navigation.TRAININGS
+import com.leth.ctg.ui.navigation.Screens
 
 sealed class BottomBarScreen(
     val route: String,
@@ -24,13 +24,13 @@ sealed class BottomBarScreen(
     @DrawableRes val icon: Int,
 ) {
     object Training : BottomBarScreen(
-        route = TRAININGS,
+        route = Screens.Select.route,
         title = "Trainings",
         icon = R.drawable.ic_exercise,
     )
 
     object Preferences : BottomBarScreen(
-        route = "preferences_screen",
+        route = Screens.Preferences.route,
         title = "Preferences",
         icon = R.drawable.ic_trainings_list,
     )
