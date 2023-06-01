@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.leth.ctg.ui.navigation.getTrainingScreenPath
+import com.leth.ctg.ui.navigation.Screens.Preferences.getTrainingScreenPath
 import com.leth.ctg.ui.views.TrainingItem
 
 @OptIn(ExperimentalFoundationApi::class)

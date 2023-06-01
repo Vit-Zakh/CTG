@@ -7,13 +7,31 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.leth.ctg.ui.screens.preferences.PreferencesScreen
-
-const val PREFERENCES_SCREEN = "preferences_screen"
+import com.leth.ctg.ui.screens.selection.SelectTrainingScreen
+import com.leth.ctg.ui.screens.training.TrainingScreen
 
 private const val TWEEN_FOR_NAVIGATION = 200
+private const val KEY_TRAINING_ID = "training_id"
+
+sealed class Screens(val route: String) {
+    object Preferences : Screens(route = "preferences_screen")
+
+    object Select : Screens(route = "select_training_screen")
+    object Training :
+        Screens(route = "training_screen/{${KEY_TRAINING_ID}}")
+
+    fun getTrainingScreenPath(trainingId: Long?): String =
+        if (trainingId != null) {
+            "training_screen/$trainingId"
+        } else {
+            "training_screen/${-1L}"
+        }
+}
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -25,10 +43,32 @@ fun AppNavHost(
         navController = navController,
         enterTransition = { fadeIn(animationSpec = tween(TWEEN_FOR_NAVIGATION)) },
         exitTransition = { ExitTransition.None },
-        startDestination = TRAININGS,
+        startDestination = Screens.Select.route,
     ) {
-        trainingsNavGraph(navController, modifier)
-        composable(route = PREFERENCES_SCREEN) {
+        composable(route = Screens.Select.route) {
+            SelectTrainingScreen(
+                navigation = navController,
+                modifier = modifier,
+            )
+        }
+        composable(
+            route = Screens.Training.route,
+            arguments = listOf(
+                navArgument(KEY_TRAINING_ID) {
+                    type = NavType.LongType
+                },
+            )
+        ) { backStackEntry ->
+            TrainingScreen(
+                trainingId = backStackEntry.arguments?.getLong(
+                    KEY_TRAINING_ID,
+                    -1L
+                ),
+                modifier = modifier,
+                navigation = navController,
+            )
+        }
+        composable(route = Screens.Preferences.route) {
             PreferencesScreen(
                 navigation = navController,
                 modifier = modifier,

@@ -90,6 +90,7 @@ class TrainingRepositoryMock @Inject constructor(
     }
 
     override suspend fun fetchTrainings() {
+        trainingsDao.deleteTrainings()
         trainingFormatsDao.fetchEnabledFormats().map { preference ->
             val trainingsList = mutableListOf<TrainingEntity>()
             val patternId = generateTrainingPattern(preference)
