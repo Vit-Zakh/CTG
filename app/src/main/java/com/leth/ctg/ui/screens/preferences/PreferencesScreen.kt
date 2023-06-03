@@ -20,11 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.leth.ctg.ui.theme.CTGTheme
+import com.leth.ctg.ui.views.CtgTitle
 import com.leth.ctg.ui.views.TrainingSetupItem
 
 @Composable
@@ -41,7 +43,10 @@ fun PreferencesScreen(
             .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = "Preferences")
+        CtgTitle(
+            firstLine = "Customize your", secondLine = "Preferences",
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+        )
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -64,14 +69,15 @@ fun PreferencesScreen(
         ) {
             Button(
                 onClick = { viewModel.addNewTraining() },
+                shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 0.dp),
-                shape = RoundedCornerShape(8.dp),
+                    .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 0.dp)
             ) {
                 Text(
                     text = "New Training",
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    fontSize = 24.sp,
                 )
             }
         }
