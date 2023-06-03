@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.leth.ctg.ui.navigation.Screens.Preferences.getTrainingScreenPath
+import com.leth.ctg.ui.views.CtgTitle
 import com.leth.ctg.ui.views.TrainingItem
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -44,13 +45,10 @@ fun SelectTrainingScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Select your \n\n                training",
-            textAlign = TextAlign.Justify,
-            fontSize = 42.sp,
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
+
+        CtgTitle(
+            firstLine = "Select your", secondLine = "Today's Training",
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
         )
 
         LazyVerticalStaggeredGrid(

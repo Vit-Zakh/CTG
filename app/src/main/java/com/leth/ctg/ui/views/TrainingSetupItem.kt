@@ -55,6 +55,7 @@ fun TrainingSetupItem(
 
     val selectedTags = remember { mutableStateOf(training.tags) }
     val titleValue = remember { mutableStateOf(training.title) }
+    val isLoading = remember { mutableStateOf(true) }
 
     Row(
         modifier = Modifier
@@ -69,8 +70,10 @@ fun TrainingSetupItem(
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth(0.4f)
-                .fillMaxHeight(),
+                .fillMaxHeight()
+                .shimmerEffect(isLoading.value),
             alignment = Alignment.Center,
+            onSuccess = { isLoading.value = false },
             contentScale = ContentScale.Crop
         )
         Column(

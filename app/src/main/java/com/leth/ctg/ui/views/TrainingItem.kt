@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.leth.ctg.R
 import com.leth.ctg.ui.theme.CTGTheme
 
@@ -26,6 +29,9 @@ fun TrainingItem(
     title: String,
     modifier: Modifier,
 ) {
+
+    val isLoading = remember { mutableStateOf(true) }
+
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
@@ -37,7 +43,9 @@ fun TrainingItem(
             modifier = Modifier
                 .fillMaxHeight(0.8f)
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp)),
+                .clip(RoundedCornerShape(16.dp))
+                .shimmerEffect(isLoading.value),
+            onSuccess = { isLoading.value = false },
             contentScale = ContentScale.Crop,
             alignment = Alignment.TopCenter
         )
