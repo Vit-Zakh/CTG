@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.leth.ctg.R
 import com.leth.ctg.domain.models.ExerciseModel
 import com.leth.ctg.ui.theme.Purple80
@@ -45,6 +46,7 @@ fun ExerciseItem(
 ) {
 
     val isChecked = remember { mutableStateOf(false) }
+    val isLoading = remember { mutableStateOf(true) }
 
     Row(
         modifier = Modifier
@@ -57,9 +59,11 @@ fun ExerciseItem(
         AsyncImage(
             model = R.drawable.chest_press,
             contentDescription = null,
+            onSuccess = { isLoading.value = false },
             modifier = Modifier
                 .fillMaxWidth(0.3f)
-                .fillMaxHeight(),
+                .fillMaxHeight()
+                .shimmerEffect(isLoading.value),
             alignment = Alignment.BottomStart,
             contentScale = ContentScale.Crop
         )
