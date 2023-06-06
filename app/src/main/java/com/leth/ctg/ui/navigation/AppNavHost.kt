@@ -43,8 +43,9 @@ fun AppNavHost(
         navController = navController,
         enterTransition = { fadeIn(animationSpec = tween(TWEEN_FOR_NAVIGATION)) },
         exitTransition = { ExitTransition.None },
-        startDestination = Screens.Select.route,
+        startDestination = AUTHENTICATION_ROUTE,
     ) {
+        authenticationNavGraph(navController = navController, modifier = modifier)
         composable(route = Screens.Select.route) {
             SelectTrainingScreen(
                 navigation = navController,
