@@ -19,25 +19,29 @@ class SignInViewModel @Inject constructor(
     private val authRepository: AuthRepository,
 ) : ViewModel() {
 
-    var username by mutableStateOf("")
-        private set
-
-    var password by mutableStateOf("")
+    var state by mutableStateOf(SignInScreenState())
         private set
 
     private val resultChannel = Channel<ApiResult<Unit>>()
     val authResults = resultChannel.receiveAsFlow()
 
     fun updateUsername(newValue: String) {
-        username = newValue
+        state = state.copy(username = newValue)
     }
 
     fun updatePassword(newValue: String) {
-        password = newValue
+        state = state.copy(password = newValue)
     }
 
-    fun signIn() = viewModelScope.launch(Dispatchers.IO) {
-        val result = authRepository.signIn(username, password)
-        resultChannel.send(result)
+    fun updatePasswordVisibility(newValue: Boolean) {
+        state = state.copy(showPassword = newValue)
+    }
+
+    fun signIn() {
+        state = state.copy(isLoading = true)
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = authRepository.signIn(state.username, state.password)
+            resultChannel.send(result)
+        }
     }
 }

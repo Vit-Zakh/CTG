@@ -3,18 +3,16 @@ package com.leth.ctg.ui.screens.signin
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -33,6 +31,7 @@ import com.leth.ctg.domain.models.ApiResult
 import com.leth.ctg.ui.navigation.AUTHENTICATION_ROUTE
 import com.leth.ctg.ui.navigation.AuthenticationScreen
 import com.leth.ctg.ui.navigation.Screens
+import com.leth.ctg.ui.views.PasswordField
 import com.leth.ctg.ui.views.TransparentButton
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -44,6 +43,8 @@ fun SignInScreen(
 ) {
 
     val context = LocalContext.current
+
+    val state = viewModel.state
 
     LaunchedEffect(key1 = viewModel) {
         viewModel.authResults.collect { result ->
@@ -62,62 +63,47 @@ fun SignInScreen(
             }
         }
     }
-
-    Column(
+    Box(
         modifier = modifier
             .fillMaxWidth()
-            .fillMaxHeight(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxHeight()
     ) {
-
-        TextField(
-            value = viewModel.username,
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color.Transparent,
-            ),
-            onValueChange = {
-                viewModel.updateUsername(it)
-            },
-            placeholder = { if (viewModel.username.isEmpty()) Text(text = "Username") },
-            singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-        )
-
-        TextField(
-            value = viewModel.password,
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color.Transparent,
-            ),
-            onValueChange = {
-                viewModel.updatePassword(it)
-            },
-            placeholder = { if (viewModel.password.isEmpty()) Text(text = "Password") },
-            singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-        )
-
-//        TextField(
-//            value = titleValue.value,
-//            colors = TextFieldDefaults.textFieldColors(
-//                containerColor = Color.Transparent,
-//            ),
-//            onValueChange = {
-//                titleValue.value = it
-//                delayedTrainingUpdate.invoke(training.copy(title = it))
-//            },
-//            placeholder = { if (titleValue.value.isEmpty()) Text(text = "Repeat Password") },
-//            singleLine = true,
-//            modifier = Modifier
-//                .fillMaxWidth(),
-//        )
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .fillMaxHeight()
+                .align(Alignment.Center),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            TextField(
+                value = state.username,
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color.Transparent,
+                ),
+                onValueChange = {
+                    viewModel.updateUsername(it)
+                },
+                placeholder = { if (state.username.isEmpty()) Text(text = "Username") },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            )
+
+            PasswordField(
+                value = state.password,
+                onValueChanged = { viewModel.updatePassword(it) },
+                placeHolderText = "Password",
+                showPassword = state.showPassword,
+                changePasswordVisibility = { viewModel.updatePasswordVisibility(!state.showPassword) })
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
         ) {
             Button(
                 onClick = { viewModel.signIn() },
@@ -140,11 +126,6 @@ fun SignInScreen(
                     .height(ButtonDefaults.MinHeight * 1.5f)
                     .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 0.dp),
             ) {
-//                Icon(
-//                    imageVector = Icons.Default.Refresh, contentDescription = "",
-//                    modifier = Modifier
-//                        .padding(8.dp)
-//                )
                 Text(
                     text = "Sign Up",
                     textAlign = TextAlign.Center,
