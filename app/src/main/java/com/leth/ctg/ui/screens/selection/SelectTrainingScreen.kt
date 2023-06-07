@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -50,6 +51,14 @@ fun SelectTrainingScreen(
             firstLine = "Select your", secondLine = "Today's Training",
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
         )
+
+        Button(onClick = { viewModel.test1() }) {
+            Text(text = "Test 1")
+        }
+
+        Button(onClick = { viewModel.test2() }) {
+            Text(text = "Test 2")
+        }
 
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(2),
