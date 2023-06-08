@@ -3,7 +3,7 @@ package com.leth.ctg.data.repository
 import com.leth.ctg.data.api.TrainingsApi
 import com.leth.ctg.data.dto.TrainingDto
 import com.leth.ctg.data.requests.SaveTrainingsRequest
-import com.leth.ctg.data.response.TrainingsResponse
+import com.leth.ctg.data.response.ResponseWithData
 import com.leth.ctg.domain.models.ApiResult
 import com.leth.ctg.domain.models.TrainingSetupModel
 import com.leth.ctg.domain.repository.Preferences
@@ -38,7 +38,7 @@ class TrainingsRepositoryImpl(
         ),
 )
 
-    override suspend fun fetchTrainings(): ApiResult<TrainingsResponse> {
+    override suspend fun fetchTrainings(): ApiResult<ResponseWithData<List<TrainingDto>>> {
         return try {
             val token = preferences.getToken() ?: return ApiResult.Error()
             val response = api.fetchTrainings("Bearer $token")

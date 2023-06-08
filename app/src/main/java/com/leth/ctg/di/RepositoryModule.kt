@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.leth.ctg.DATABASE_NAME
 import com.leth.ctg.SHARED_PREFERENCES_NAME
 import com.leth.ctg.data.api.AuthApi
+import com.leth.ctg.data.api.PreferencesApi
 import com.leth.ctg.data.api.TrainingsApi
 import com.leth.ctg.data.database.Converters
 import com.leth.ctg.data.database.TrainingsDatabase
@@ -17,10 +18,12 @@ import com.leth.ctg.data.repository.AuthRepositoryImpl
 import com.leth.ctg.data.repository.PreferencesManager
 import com.leth.ctg.data.repository.TrainingRepositoryMock
 import com.leth.ctg.data.repository.TrainingsRepositoryImpl
+import com.leth.ctg.data.repository.UserPreferencesRepositoryImpl
 import com.leth.ctg.domain.repository.AuthRepository
 import com.leth.ctg.domain.repository.Preferences
 import com.leth.ctg.domain.repository.TrainingRepository
 import com.leth.ctg.domain.repository.TrainingsRepositoryBE
+import com.leth.ctg.domain.repository.UserPreferencesRepositoryBE
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -124,4 +127,21 @@ object RepositoryModule {
         api: TrainingsApi,
         preferences: Preferences,
     ): TrainingsRepositoryBE = TrainingsRepositoryImpl(api, preferences,)
+
+    @Provides
+    @Singleton
+    fun providePreferencesApi(): PreferencesApi {
+        return Retrofit.Builder()
+            .baseUrl("http://192.168.0.43:8080/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserPreferencesRepositoryBE(
+        api: PreferencesApi,
+        preferences: Preferences,
+    ): UserPreferencesRepositoryBE = UserPreferencesRepositoryImpl(api, preferences,)
 }

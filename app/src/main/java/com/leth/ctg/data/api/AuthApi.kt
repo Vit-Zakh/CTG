@@ -1,7 +1,7 @@
 package com.leth.ctg.data.api
 
 import com.leth.ctg.data.requests.AuthRequest
-import com.leth.ctg.data.response.TokenResponse
+import com.leth.ctg.data.response.ResponseWithData
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -16,7 +16,7 @@ interface AuthApi {
     @POST("signin")
     suspend fun signIn(
         @Body request: AuthRequest,
-    ): TokenResponse
+    ): ResponseWithData<String>
 
     @GET("authenticate")
     suspend fun authenticate(
