@@ -1,7 +1,8 @@
 package com.leth.ctg.data.api
 
+import com.leth.ctg.data.dto.TrainingDto
 import com.leth.ctg.data.requests.SaveTrainingsRequest
-import com.leth.ctg.data.response.TrainingsResponse
+import com.leth.ctg.data.response.ResponseWithData
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -17,5 +18,5 @@ interface TrainingsApi {
     @GET("trainings")
     suspend fun fetchTrainings(
         @Header("Authorization") token: String,
-    ) : TrainingsResponse
+    ) : ResponseWithData<List<TrainingDto>>
 }

@@ -33,7 +33,7 @@ class AuthRepositoryImpl(
                     password = password
                 )
             )
-            preferences.saveToken(response.token)
+            preferences.saveToken(response.data)
             ApiResult.Success()
         } catch (e: Exception) {
             ApiResult.Error(e.message ?: "Unknown error")
