@@ -46,10 +46,57 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun signUp() {
+        val isUsernameValid = isUsernameDataValid()
+        val isPasswordValid = isPasswordDataValid()
+        val isRepeatPasswordValid = isRepeatPasswordDataValid()
+        if (!isUsernameValid || !isPasswordValid || !isRepeatPasswordValid) return
         state = state.copy(isLoading = true)
         viewModelScope.launch(Dispatchers.IO) {
             val result = authRepository.signUp(state.username, state.password)
             resultChannel.send(result)
+        }
+    }
+
+    private fun isPasswordDataValid(): Boolean {
+        return when {
+            state.password.isBlank() -> {
+                state = state.copy(passwordError = "This field cannot be blank")
+                false
+            }
+
+            state.password.length !in 8..15 -> {
+                state =
+                    state.copy(passwordError = "Password should contain from 8 to 15 characters")
+                false
+            }
+
+            else -> true
+        }
+    }
+
+    private fun isRepeatPasswordDataValid(): Boolean {
+        return when {
+            state.repeatPassword.isBlank() -> {
+                state = state.copy(repeatPasswordError = "This field cannot be blank")
+                false
+            }
+
+            state.password != state.repeatPassword -> {
+                state =
+                    state.copy(repeatPasswordError = "Passwords do not match")
+                false
+            }
+
+            else -> true
+        }
+    }
+
+    private fun isUsernameDataValid(): Boolean {
+        return if (state.username.isEmpty()) {
+            state = state.copy(usernameError = "This field cannot be blank")
+            false
+        } else {
+            true
         }
     }
 }
