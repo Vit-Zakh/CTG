@@ -38,10 +38,40 @@ class SignInViewModel @Inject constructor(
     }
 
     fun signIn() {
+        val isUsernameValid = isUsernameDataValid()
+        val isPasswordValid = isPasswordDataValid()
+        if (!isUsernameValid || !isPasswordValid) return
         state = state.copy(isLoading = true)
         viewModelScope.launch(Dispatchers.IO) {
             val result = authRepository.signIn(state.username, state.password)
             resultChannel.send(result)
         }
     }
+
+    private fun isPasswordDataValid(): Boolean {
+        return when {
+            state.password.isBlank() -> {
+                state = state.copy(passwordError = "This field cannot be blank")
+                false
+            }
+
+            state.password.length !in 8..15 -> {
+                state =
+                    state.copy(passwordError = "Password should contain from 8 to 15 characters")
+                false
+            }
+
+            else -> true
+        }
+    }
+
+    private fun isUsernameDataValid(): Boolean {
+        return if (state.username.isEmpty()) {
+            state = state.copy(usernameError = "This field cannot be blank")
+            false
+        } else {
+            true
+        }
+    }
+
 }

@@ -14,13 +14,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -33,6 +30,7 @@ import com.leth.ctg.ui.navigation.AuthenticationScreen
 import com.leth.ctg.ui.navigation.Screens
 import com.leth.ctg.ui.views.PasswordField
 import com.leth.ctg.ui.views.TransparentButton
+import com.leth.ctg.ui.views.UsernameField
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -77,19 +75,11 @@ fun SignInScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            TextField(
+            UsernameField(
                 value = state.username,
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent,
-                ),
-                onValueChange = {
-                    viewModel.updateUsername(it)
-                },
-                placeholder = { if (state.username.isEmpty()) Text(text = "Username") },
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                onValueChanged = { viewModel.updateUsername(it) },
+                placeHolderText = "Username",
+                errorText = state.usernameError,
             )
 
             PasswordField(
@@ -97,7 +87,9 @@ fun SignInScreen(
                 onValueChanged = { viewModel.updatePassword(it) },
                 placeHolderText = "Password",
                 showPassword = state.showPassword,
-                changePasswordVisibility = { viewModel.updatePasswordVisibility(!state.showPassword) })
+                changePasswordVisibility = { viewModel.updatePasswordVisibility(!state.showPassword) },
+                errorText = state.passwordError,
+            )
         }
 
         Column(
