@@ -1,5 +1,6 @@
 package com.leth.ctg.data.repository
 
+import android.util.Log
 import com.leth.ctg.data.api.AuthApi
 import com.leth.ctg.data.requests.AuthRequest
 import com.leth.ctg.domain.models.ApiResult
@@ -43,6 +44,7 @@ class AuthRepositoryImpl(
     override suspend fun authenticate(): ApiResult<Unit> {
         return try {
             val token = preferences.getToken() ?: return ApiResult.Error()
+            Log.d("VZ_TAG", "authenticate: $token")
             api.authenticate("Bearer $token")
             ApiResult.Success()
         } catch (e: Exception) {
