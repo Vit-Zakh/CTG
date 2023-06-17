@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.leth.ctg.domain.models.ApiResult
 import com.leth.ctg.domain.repository.AuthRepository
+import com.leth.ctg.domain.repository.TrainingsRepositoryBE
+import com.leth.ctg.domain.repository.UserPreferencesRepositoryBE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -17,6 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private val authRepository: AuthRepository,
+    private val trainingRepositoryBE: TrainingsRepositoryBE,
+    private val userPreferencesRepositoryBE: UserPreferencesRepositoryBE,
 ) : ViewModel() {
 
     var state by mutableStateOf(SignInScreenState())
@@ -46,6 +50,11 @@ class SignInViewModel @Inject constructor(
             val result = authRepository.signIn(state.username, state.password)
             resultChannel.send(result)
         }
+    }
+
+    fun fetchDataForLoggedInUser() = viewModelScope.launch(Dispatchers.IO) {
+        trainingRepositoryBE.fetchTrainings()
+        userPreferencesRepositoryBE.fetchPreferences()
     }
 
     private fun isPasswordDataValid(): Boolean {

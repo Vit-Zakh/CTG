@@ -7,7 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.leth.ctg.domain.models.ApiResult
 import com.leth.ctg.domain.repository.AuthRepository
-import com.leth.ctg.domain.repository.TrainingRepository
+import com.leth.ctg.domain.repository.TrainingsRepositoryBE
+import com.leth.ctg.domain.repository.UserPreferencesRepositoryBE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -18,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val trainingRepository: TrainingRepository,
+    private val trainingRepositoryBE: TrainingsRepositoryBE,
+    private val userPreferencesRepositoryBE: UserPreferencesRepositoryBE,
     private val authRepository: AuthRepository,
 ) : ViewModel() {
 
@@ -28,14 +30,6 @@ class MainViewModel @Inject constructor(
     private val resultChannel = Channel<ApiResult<Unit>>()
     val authResults = resultChannel.receiveAsFlow()
 
-    init {
-        viewModelScope.launch(Dispatchers.IO) {
-            trainingRepository.fetchExercises()
-            trainingRepository.fetchPreferences()
-            trainingRepository.fetchTrainings()
-        }
-    }
-
     fun authenticate() {
         viewModelScope.launch {
             state = state.copy(isLoading = true)
@@ -44,5 +38,10 @@ class MainViewModel @Inject constructor(
             resultChannel.send(result)
             state = state.copy(isLoading = false)
         }
+    }
+
+    fun fetchDataForLoggedInUser() = viewModelScope.launch(Dispatchers.IO) {
+        trainingRepositoryBE.fetchTrainings()
+        userPreferencesRepositoryBE.fetchPreferences()
     }
 }

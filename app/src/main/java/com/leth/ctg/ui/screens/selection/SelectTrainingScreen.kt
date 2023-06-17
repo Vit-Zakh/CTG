@@ -1,5 +1,6 @@
 package com.leth.ctg.ui.screens.selection
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,19 +11,16 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.leth.ctg.ui.navigation.Screens.Preferences.getTrainingScreenPath
@@ -39,6 +37,12 @@ fun SelectTrainingScreen(
 
     val state = viewModel.state.collectAsState()
 
+    val context = LocalContext.current
+    LaunchedEffect(context) {
+        Log.d("VZ_TAG", "context changed")
+        viewModel.fetchDataForLoggedInUser()
+    }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -51,14 +55,6 @@ fun SelectTrainingScreen(
             firstLine = "Select your", secondLine = "Today's Training",
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
         )
-
-        Button(onClick = { viewModel.test1() }) {
-            Text(text = "Test 1")
-        }
-
-        Button(onClick = { viewModel.test2() }) {
-            Text(text = "Test 2")
-        }
 
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(2),

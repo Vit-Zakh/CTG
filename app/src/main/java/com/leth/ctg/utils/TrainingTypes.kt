@@ -1,5 +1,7 @@
 package com.leth.ctg.utils
 
+import kotlinx.serialization.Serializable
+
 enum class TrainingTypes(val title: String) {
     UNKNOWN("unknown"),
     TYPE_ONE("type_one"),
@@ -8,17 +10,17 @@ enum class TrainingTypes(val title: String) {
     TYPE_CROSSFIT("type_crossfit"),
 }
 
+@Serializable
 enum class TrainingType {
     CHEST,
     BACK,
+    SHOULDERS,
     ARMS,
     LEGS,
     FULL_BODY,
-    CROSSFIT,
-    STRETCHING,
-    SURPRISE,
 }
 
+@Serializable
 enum class ExerciseClass {
     PRIMARY,
     AUXILIARY,

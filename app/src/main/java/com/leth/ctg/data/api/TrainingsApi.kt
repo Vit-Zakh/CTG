@@ -15,7 +15,7 @@ interface TrainingsApi {
         @Body request: SaveTrainingsRequest,
     )
 
-    @GET("trainings")
+    @GET("my_trainings")
     suspend fun fetchTrainings(
         @Header("Authorization") token: String,
     ) : ResponseWithData<List<TrainingDto>>

@@ -1,38 +1,32 @@
 package com.leth.ctg.ui.screens.training
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.leth.ctg.domain.models.ExerciseModel
-import com.leth.ctg.domain.repository.TrainingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TrainingViewModel @Inject constructor(
-    private val trainingRepository: TrainingRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<TrainingScreenState>(TrainingScreenState())
 
     val state = _state
 
-    fun fetchTraining(id: Long) = viewModelScope.launch {
-        _state.value = _state.value.copy(isLoading = true)
-        delay(300)
-        trainingRepository.fetchExercisesForTraining(id).map {
-            _state.value = _state.value.copy(
-                isLoading = false,
-                training = it,
-                completionProgress = calculateCompletionProgress(it.exercises)
-            )
-        }.launchIn(this)
+    fun fetchTraining(id: String) = viewModelScope.launch {
+//        _state.value = _state.value.copy(isLoading = true)
+//        delay(300)
+//        trainingRepository.fetchExercisesForTraining(id).map {
+//            _state.value = _state.value.copy(
+//                isLoading = false,
+//                training = it,
+//                completionProgress = calculateCompletionProgress(it.exercises)
+//            )
+//        }.launchIn(this)
     }
 
     fun startTraining() {
@@ -49,8 +43,8 @@ class TrainingViewModel @Inject constructor(
         )
     }
 
-    fun completeExercise(exerciseId: Long) = viewModelScope.launch(Dispatchers.IO) {
-        trainingRepository.completeExercise(exerciseId)
+    fun completeExercise(exerciseId: String) = viewModelScope.launch(Dispatchers.IO) {
+//        trainingRepository.completeExercise(exerciseId)
         val updatedExercisesList = _state.value.training?.exercises?.toMutableList()
         updatedExercisesList?.let { list ->
             val indexToUpdate = list.indexOfFirst { it.id == exerciseId }
@@ -68,13 +62,13 @@ class TrainingViewModel @Inject constructor(
     fun regenerateExercise(exercise: ExerciseModel) =
         state.value.training?.let { training ->
             viewModelScope.launch(Dispatchers.IO) {
-                trainingRepository.regenerateExercise(exercise, training)
+//                trainingRepository.regenerateExercise(exercise, training)
             }
         }
 
     fun regenerateTraining() = state.value.training?.let { training ->
         viewModelScope.launch {
-            trainingRepository.regenerateTraining(training)
+//            trainingRepository.regenerateTraining(training)
         }
     }
 

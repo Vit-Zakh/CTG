@@ -41,7 +41,7 @@ import com.leth.ctg.ui.views.TransparentButton
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrainingScreen(
-    trainingId: Long?,
+    trainingId: String?,
     navigation: NavController,
     modifier: Modifier,
     viewModel: TrainingViewModel = hiltViewModel(),
@@ -50,7 +50,7 @@ fun TrainingScreen(
     val state = viewModel.state.collectAsState()
 
     LaunchedEffect(key1 = viewModel) {
-        viewModel.fetchTraining(trainingId ?: -1)
+        viewModel.fetchTraining(trainingId ?: "")
     }
 
     Column(

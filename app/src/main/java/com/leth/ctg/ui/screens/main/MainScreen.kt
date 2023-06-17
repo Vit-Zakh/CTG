@@ -37,6 +37,7 @@ fun MainScreen(
             viewModel.authResults.collect { result ->
                 when (result) {
                     is ApiResult.Success -> {
+                        viewModel.fetchDataForLoggedInUser()
                         navController.navigate(Screens.Select.route) {
                             popUpTo(AUTHENTICATION_ROUTE) {
                                 inclusive = true

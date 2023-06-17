@@ -9,12 +9,14 @@ import com.leth.ctg.utils.TrainingType
 
 @Entity(tableName = "exercises")
 data class ExerciseEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0L,
+    @PrimaryKey val id: String,
     val type: TrainingType,
     val title: String,
+    val imageUrl: String? = null,
     val category: ExerciseClass,
-    val wasLastTime: Boolean = false,
+    val wasLastTime: Boolean,
+    val isReserved: Boolean,
+//    val wasLastTime: Boolean = false,
 )
 
 fun ExerciseEntity.toDomain() = ExerciseModel(

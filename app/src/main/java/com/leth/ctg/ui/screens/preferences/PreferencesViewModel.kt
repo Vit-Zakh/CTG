@@ -1,11 +1,11 @@
 package com.leth.ctg.ui.screens.preferences
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.leth.ctg.domain.models.TrainingSetupModel
-import com.leth.ctg.domain.repository.TrainingRepository
+import com.leth.ctg.domain.repository.UserPreferencesRepositoryBE
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -21,12 +21,14 @@ data class PreferencesScreenState(
 
 @HiltViewModel
 class PreferencesViewModel @Inject constructor(
-    private val trainingRepository: TrainingRepository,
+    private val preferencesRepositoryBE: UserPreferencesRepositoryBE,
+//    private val trainingsRepositoryBE: TrainingsRepositoryBE,
 ) : ViewModel() {
 
     private var delayedJobForTrainingUpdate: Job? = null
 
-    val state = trainingRepository.preferences.map {
+
+    val state = preferencesRepositoryBE.preferences.map {
         PreferencesScreenState(it)
     }.stateIn(
         scope = viewModelScope,
@@ -35,18 +37,28 @@ class PreferencesViewModel @Inject constructor(
     )
 
     fun addNewTraining() = viewModelScope.launch(Dispatchers.IO) {
-        trainingRepository.addNewTraining()
+        preferencesRepositoryBE.addNewTraining()
     }
 
     fun updateTraining(training: TrainingSetupModel) = viewModelScope.launch(Dispatchers.IO) {
-        trainingRepository.updateTrainingDetails(training)
+//        preferencesRepositoryBE.updateTrainingDetails(training)
     }
 
     fun updateTrainingWithDelay(training: TrainingSetupModel) {
         delayedJobForTrainingUpdate?.cancel()
         delayedJobForTrainingUpdate = viewModelScope.launch(Dispatchers.IO) {
             delay(300L)
-            trainingRepository.updateTrainingDetails(training)
+//            preferencesRepositoryBE.updateTrainingDetails(training)
+        }
+    }
+
+    //    fun fetchTrainings() = viewModelScope.launch(Dispatchers.IO) {
+//        trainingRepository.fetchTrainings()
+//    }
+    fun savePreferences() {
+        Log.d("VZ_TAG", "trying to save prefs: ")
+        viewModelScope.launch(Dispatchers.IO) {
+            preferencesRepositoryBE.savePreferences(state.value.list)
         }
     }
 }
