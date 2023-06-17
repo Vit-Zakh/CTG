@@ -1,24 +1,25 @@
-package com.leth.ctg.domain.models
+package com.leth.ctg.data.dto
 
 import com.leth.ctg.data.database.entity.ExerciseEntity
 import com.leth.ctg.utils.ExerciseClass
 import com.leth.ctg.utils.TrainingType
 
-data class ExerciseModel(
+data class ExerciseDto(
     val id: String,
-    val type: TrainingType,
     val title: String,
     val imageUrl: String? = null,
+    val type: TrainingType,
     val category: ExerciseClass,
-    val isCompleted: Boolean,
+    val wasLastTime: Boolean,
+    val isReserved: Boolean,
 )
 
-fun ExerciseModel.toEntity() = ExerciseEntity(
+fun ExerciseDto.toEntity() = ExerciseEntity(
     id = id,
-    type = type,
     title = title,
-    category = category,
-    wasLastTime = isCompleted,
     imageUrl = imageUrl,
-    isReserved = false,
+    type = type,
+    category = category,
+    wasLastTime = wasLastTime,
+    isReserved = isReserved
 )

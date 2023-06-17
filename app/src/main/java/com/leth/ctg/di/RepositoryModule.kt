@@ -16,12 +16,10 @@ import com.leth.ctg.data.database.dao.TrainingFormatsDao
 import com.leth.ctg.data.database.dao.TrainingsDao
 import com.leth.ctg.data.repository.AuthRepositoryImpl
 import com.leth.ctg.data.repository.PreferencesManager
-import com.leth.ctg.data.repository.TrainingRepositoryMock
 import com.leth.ctg.data.repository.TrainingsRepositoryImpl
 import com.leth.ctg.data.repository.UserPreferencesRepositoryImpl
 import com.leth.ctg.domain.repository.AuthRepository
 import com.leth.ctg.domain.repository.Preferences
-import com.leth.ctg.domain.repository.TrainingRepository
 import com.leth.ctg.domain.repository.TrainingsRepositoryBE
 import com.leth.ctg.domain.repository.UserPreferencesRepositoryBE
 import dagger.Module
@@ -80,15 +78,6 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideTrainingsRepository(
-        trainingFormatsDao: TrainingFormatsDao,
-        exercisesDao: ExercisesDao,
-        trainingsDao: TrainingsDao,
-        patternsDao: PatternsDao,
-    ): TrainingRepository = TrainingRepositoryMock(trainingFormatsDao, exercisesDao, trainingsDao, patternsDao)
-
-    @Provides
-    @Singleton
     fun provideAuthorizationRepository(
         api: AuthApi,
         preferences: Preferences,
@@ -125,8 +114,9 @@ object RepositoryModule {
     @Singleton
     fun provideTrainingsBERepository(
         api: TrainingsApi,
-        preferences: Preferences,
-    ): TrainingsRepositoryBE = TrainingsRepositoryImpl(api, preferences,)
+        sharedPreferences: Preferences,
+        trainingsDao: TrainingsDao
+    ): TrainingsRepositoryBE = TrainingsRepositoryImpl(api, sharedPreferences, trainingsDao)
 
     @Provides
     @Singleton
@@ -142,6 +132,7 @@ object RepositoryModule {
     @Singleton
     fun provideUserPreferencesRepositoryBE(
         api: PreferencesApi,
-        preferences: Preferences,
-    ): UserPreferencesRepositoryBE = UserPreferencesRepositoryImpl(api, preferences,)
+        sharedPreferences: Preferences,
+        trainingFormatsDao: TrainingFormatsDao,
+    ): UserPreferencesRepositoryBE = UserPreferencesRepositoryImpl(api, sharedPreferences,trainingFormatsDao)
 }

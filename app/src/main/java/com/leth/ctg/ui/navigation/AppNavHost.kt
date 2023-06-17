@@ -29,7 +29,7 @@ sealed class Screens(val route: String) {
         if (trainingId != null) {
             "training_screen/$trainingId"
         } else {
-            "training_screen/${-1L}"
+            "training_screen/${""}"
         }
 }
 
@@ -56,14 +56,14 @@ fun AppNavHost(
             route = Screens.Training.route,
             arguments = listOf(
                 navArgument(KEY_TRAINING_ID) {
-                    type = NavType.LongType
+                    type = NavType.StringType
                 },
             )
         ) { backStackEntry ->
             TrainingScreen(
-                trainingId = backStackEntry.arguments?.getLong(
+                trainingId = backStackEntry.arguments?.getString(
                     KEY_TRAINING_ID,
-                    -1L
+                    ""
                 ),
                 modifier = modifier,
                 navigation = navController,

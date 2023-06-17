@@ -9,6 +9,7 @@ import com.leth.ctg.utils.TrainingType
 data class TrainingFormatEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
+    val mongoId: String? = null,
     val title: String,
     val imageUrl: String?,
     val trainingTypes: List<TrainingType>,
