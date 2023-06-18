@@ -11,6 +11,7 @@ import com.leth.ctg.data.api.TrainingsApi
 import com.leth.ctg.data.database.Converters
 import com.leth.ctg.data.database.TrainingsDatabase
 import com.leth.ctg.data.database.dao.ExercisesDao
+import com.leth.ctg.data.database.dao.LocalPreferencesDao
 import com.leth.ctg.data.database.dao.PatternsDao
 import com.leth.ctg.data.database.dao.TrainingFormatsDao
 import com.leth.ctg.data.database.dao.TrainingsDao
@@ -60,6 +61,13 @@ object RepositoryModule {
     @Singleton
     fun provideTrainingFormatsDao(database: TrainingsDatabase): TrainingFormatsDao =
         database.formatsDao()
+
+    @Provides
+    @Singleton
+    fun provideLocalPreferencesDao(database: TrainingsDatabase): LocalPreferencesDao =
+        database.localPreferencesDao()
+
+
 
     @Provides
     @Singleton
@@ -115,8 +123,10 @@ object RepositoryModule {
     fun provideTrainingsBERepository(
         api: TrainingsApi,
         sharedPreferences: Preferences,
-        trainingsDao: TrainingsDao
-    ): TrainingsRepositoryBE = TrainingsRepositoryImpl(api, sharedPreferences, trainingsDao)
+        trainingsDao: TrainingsDao,
+        trainingFormatsDao: TrainingFormatsDao,
+        localPreferencesDao: LocalPreferencesDao,
+    ): TrainingsRepositoryBE = TrainingsRepositoryImpl(api, sharedPreferences, trainingsDao, trainingFormatsDao, localPreferencesDao,)
 
     @Provides
     @Singleton
@@ -134,5 +144,6 @@ object RepositoryModule {
         api: PreferencesApi,
         sharedPreferences: Preferences,
         trainingFormatsDao: TrainingFormatsDao,
-    ): UserPreferencesRepositoryBE = UserPreferencesRepositoryImpl(api, sharedPreferences,trainingFormatsDao)
+        localPreferencesDao: LocalPreferencesDao,
+    ): UserPreferencesRepositoryBE = UserPreferencesRepositoryImpl(api, sharedPreferences,trainingFormatsDao, localPreferencesDao)
 }

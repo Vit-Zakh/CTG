@@ -35,12 +35,13 @@ fun SelectTrainingScreen(
     modifier: Modifier,
 ) {
 
-    val state = viewModel.state.collectAsState()
+    val state = viewModel.state
 
     val context = LocalContext.current
     LaunchedEffect(context) {
         Log.d("VZ_TAG", "context changed")
         viewModel.fetchDataForLoggedInUser()
+        viewModel.subscribeToTrainings()
     }
 
     Column(
@@ -63,7 +64,7 @@ fun SelectTrainingScreen(
             verticalItemSpacing = 16.dp,
             modifier = Modifier.fillMaxSize()
         ) {
-            itemsIndexed(state.value.list) { index, item ->
+            itemsIndexed(state.list) { index, item ->
                 TrainingItem(
                     title = item.title,
                     modifier = Modifier

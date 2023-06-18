@@ -20,6 +20,9 @@ interface TrainingsDao {
     @Query("SELECT * FROM trainings")
     fun fetchTrainings(): Flow<List<TrainingEntity>>
 
+    @Query("SELECT * FROM trainings WHERE id IN (:ids)")
+    fun fetchTrainings(ids: List<String>): List<TrainingEntity>
+
     @Query("SELECT * FROM trainings WHERE id = :id")
     fun fetchTrainingFlow(id: Long): Flow<TrainingEntity>
 

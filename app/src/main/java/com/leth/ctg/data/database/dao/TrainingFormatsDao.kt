@@ -19,6 +19,9 @@ interface TrainingFormatsDao {
     @Query("SELECT * FROM training_formats WHERE isEnabled = 1")
     fun fetchEnabledFormatsFlow(): Flow<List<TrainingFormatEntity>>
 
+    @Query("SELECT id FROM training_formats WHERE isEnabled = 1")
+    fun fetchEnabledFormatsIdsFlow(): Flow<List<String>>
+
     @Query("SELECT * FROM training_formats WHERE isEnabled = 1")
     suspend fun fetchEnabledFormats(): List<TrainingFormatEntity>
 

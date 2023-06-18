@@ -53,7 +53,7 @@ class SignInViewModel @Inject constructor(
     }
 
     fun fetchDataForLoggedInUser() = viewModelScope.launch(Dispatchers.IO) {
-        trainingRepositoryBE.fetchTrainings()
+//        trainingRepositoryBE.fetchTrainings()
         userPreferencesRepositoryBE.fetchPreferences()
     }
 

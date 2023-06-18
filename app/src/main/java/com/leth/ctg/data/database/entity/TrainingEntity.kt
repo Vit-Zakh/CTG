@@ -9,9 +9,8 @@ import com.leth.ctg.utils.TrainingType
 
 @Entity(tableName = "trainings")
 data class TrainingEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-    val mongoId: String? = null,
+    @PrimaryKey
+    val id: String,
     val title: String,
     val imageUrl: String?,
     val exercises: List<ExerciseEntity>,
