@@ -12,8 +12,14 @@ interface UserPreferencesRepositoryBE {
 
     suspend fun addNewTraining()
 
+    suspend fun updateLocalPreference(training: TrainingSetupModel)
+
+    suspend fun updateTrainingDetails(training: TrainingSetupModel)
+
     suspend fun fetchPreferences() : ApiResult<ResponseWithData<List<PreferenceDto>>>
 
     suspend fun savePreferences(preferencesList: List<TrainingSetupModel>) : ApiResult<Unit>
+
+    suspend fun savePreference(preference: TrainingSetupModel) : ApiResult<PreferenceDto>
 
 }

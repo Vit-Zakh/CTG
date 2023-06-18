@@ -15,7 +15,7 @@ data class PreferenceDto(
 )
 
 fun PreferenceDto.toEntity() = TrainingFormatEntity(
-    mongoId = id,
+    id = requireNotNull(id),
     title = title,
     imageUrl = imageUrl,
     trainingTypes = trainingTags,

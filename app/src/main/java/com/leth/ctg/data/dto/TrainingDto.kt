@@ -1,7 +1,9 @@
 package com.leth.ctg.data.dto
 
 import com.leth.ctg.data.database.entity.TrainingEntity
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TrainingDto(
     val id: String,
     val title: String,
@@ -10,7 +12,7 @@ data class TrainingDto(
 )
 
 fun TrainingDto.toEntity() = TrainingEntity(
-    mongoId = id,
+    id = id,
     title = title,
     imageUrl = imageUrl,
     exercises = exercises.map { it.toEntity() },

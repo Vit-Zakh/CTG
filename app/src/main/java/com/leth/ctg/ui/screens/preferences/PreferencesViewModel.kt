@@ -41,14 +41,14 @@ class PreferencesViewModel @Inject constructor(
     }
 
     fun updateTraining(training: TrainingSetupModel) = viewModelScope.launch(Dispatchers.IO) {
-//        preferencesRepositoryBE.updateTrainingDetails(training)
+        preferencesRepositoryBE.updateTrainingDetails(training)
     }
 
     fun updateTrainingWithDelay(training: TrainingSetupModel) {
         delayedJobForTrainingUpdate?.cancel()
         delayedJobForTrainingUpdate = viewModelScope.launch(Dispatchers.IO) {
             delay(300L)
-//            preferencesRepositoryBE.updateTrainingDetails(training)
+            preferencesRepositoryBE.updateTrainingDetails(training)
         }
     }
 

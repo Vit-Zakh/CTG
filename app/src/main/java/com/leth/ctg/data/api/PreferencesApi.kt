@@ -1,6 +1,7 @@
 package com.leth.ctg.data.api
 
 import com.leth.ctg.data.dto.PreferenceDto
+import com.leth.ctg.data.requests.SavePreferenceRequest
 import com.leth.ctg.data.requests.SavePreferencesRequest
 import com.leth.ctg.data.response.ResponseWithData
 import retrofit2.http.Body
@@ -14,6 +15,12 @@ interface PreferencesApi {
         @Header("Authorization") token: String,
         @Body request: SavePreferencesRequest,
     )
+
+    @POST("save_preference")
+    suspend fun savePreference(
+        @Header("Authorization") token: String,
+        @Body request: SavePreferenceRequest,
+    ) : ResponseWithData<PreferenceDto>
 
     @GET("preferences")
     suspend fun fetchPreferences(

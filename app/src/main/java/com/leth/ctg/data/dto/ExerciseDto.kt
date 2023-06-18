@@ -3,7 +3,9 @@ package com.leth.ctg.data.dto
 import com.leth.ctg.data.database.entity.ExerciseEntity
 import com.leth.ctg.utils.ExerciseClass
 import com.leth.ctg.utils.TrainingType
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ExerciseDto(
     val id: String,
     val title: String,

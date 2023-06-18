@@ -11,7 +11,12 @@ interface TrainingsRepositoryBE {
 
     val trainings: Flow<List<TrainingModel>>
 
+//    val activeTrainings: Flow<List<TrainingModel>>
+
     suspend fun fetchTrainings() : ApiResult<ResponseWithData<List<TrainingDto>>>
+
+    suspend fun fetchTraining(prefId: String) : ApiResult<ResponseWithData<TrainingDto>>
+    suspend fun savePrefAndFetchTraining(preferenceId: Long) : ApiResult<ResponseWithData<TrainingDto>>
 
 //    suspend fun saveTrainings(trainings: List<TrainingSetupModel>) : ApiResult<Unit>
 

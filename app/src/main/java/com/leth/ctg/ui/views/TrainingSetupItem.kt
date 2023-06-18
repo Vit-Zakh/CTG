@@ -152,7 +152,7 @@ fun TrainingSetupItemPreview() {
     CTGTheme {
         TrainingSetupItem(
             training = TrainingSetupModel(
-                id = 1L,
+                id = "1L",
                 title = "Test Title",
                 imageUrl = null,
                 tags = emptyList(),

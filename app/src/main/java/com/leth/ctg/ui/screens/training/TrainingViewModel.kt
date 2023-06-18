@@ -1,8 +1,10 @@
 package com.leth.ctg.ui.screens.training
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.leth.ctg.domain.models.ExerciseModel
+import com.leth.ctg.domain.repository.TrainingsRepositoryBE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,6 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TrainingViewModel @Inject constructor(
+    private val trainingsRepositoryBE: TrainingsRepositoryBE
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<TrainingScreenState>(TrainingScreenState())
@@ -18,6 +21,13 @@ class TrainingViewModel @Inject constructor(
     val state = _state
 
     fun fetchTraining(id: String) = viewModelScope.launch {
+       val result = if (id.toLongOrNull() == null) {
+           trainingsRepositoryBE.fetchTraining(id)
+       } else {
+           trainingsRepositoryBE.savePrefAndFetchTraining(id.toLong())
+       }
+        Log.d("VZ_TAG", "fetchTraining: $result")
+        Log.d("VZ_TAG", "fetchTraining message: ${result.message}")
 //        _state.value = _state.value.copy(isLoading = true)
 //        delay(300)
 //        trainingRepository.fetchExercisesForTraining(id).map {

@@ -25,7 +25,7 @@ sealed class Screens(val route: String) {
     object Training :
         Screens(route = "training_screen/{${KEY_TRAINING_ID}}")
 
-    fun getTrainingScreenPath(trainingId: Long?): String =
+    fun getTrainingScreenPath(trainingId: String?): String =
         if (trainingId != null) {
             "training_screen/$trainingId"
         } else {
