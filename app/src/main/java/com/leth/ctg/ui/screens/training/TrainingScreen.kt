@@ -42,6 +42,7 @@ import com.leth.ctg.ui.views.TransparentButton
 @Composable
 fun TrainingScreen(
     trainingId: String?,
+    trainingTitle: String?,
     navigation: NavController,
     modifier: Modifier,
     viewModel: TrainingViewModel = hiltViewModel(),
@@ -61,7 +62,7 @@ fun TrainingScreen(
         CenterAlignedTopAppBar(
             title = {
                 Text(
-                    trainingId.toString(),
+                    trainingTitle.toString(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )

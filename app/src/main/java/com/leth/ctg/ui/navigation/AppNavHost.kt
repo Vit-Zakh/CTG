@@ -17,19 +17,20 @@ import com.leth.ctg.ui.screens.training.TrainingScreen
 
 private const val TWEEN_FOR_NAVIGATION = 200
 private const val KEY_TRAINING_ID = "training_id"
+private const val KEY_TRAINING_TITLE = "training_title"
 
 sealed class Screens(val route: String) {
     object Preferences : Screens(route = "preferences_screen")
 
     object Select : Screens(route = "select_training_screen")
     object Training :
-        Screens(route = "training_screen/{${KEY_TRAINING_ID}}")
+        Screens(route = "training_screen/{${KEY_TRAINING_ID}}/{${KEY_TRAINING_TITLE}}")
 
-    fun getTrainingScreenPath(trainingId: String?): String =
-        if (trainingId != null) {
-            "training_screen/$trainingId"
+    fun getTrainingScreenPath(trainingId: String?, trainingTitle: String?): String =
+        if (trainingId != null && trainingTitle != null) {
+            "training_screen/$trainingId/$trainingTitle"
         } else {
-            "training_screen/${""}"
+            "training_screen/${""}/${""}"
         }
 }
 
@@ -58,11 +59,18 @@ fun AppNavHost(
                 navArgument(KEY_TRAINING_ID) {
                     type = NavType.StringType
                 },
+                navArgument(KEY_TRAINING_TITLE) {
+                    type = NavType.StringType
+                },
             )
         ) { backStackEntry ->
             TrainingScreen(
                 trainingId = backStackEntry.arguments?.getString(
                     KEY_TRAINING_ID,
+                    ""
+                ),
+                trainingTitle = backStackEntry.arguments?.getString(
+                    KEY_TRAINING_TITLE,
                     ""
                 ),
                 modifier = modifier,

@@ -3,6 +3,8 @@ package com.leth.ctg.ui.screens.training
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.leth.ctg.data.dto.toDomain
+import com.leth.ctg.domain.models.ApiResult
 import com.leth.ctg.domain.models.ExerciseModel
 import com.leth.ctg.domain.repository.TrainingsRepositoryBE
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,17 +28,15 @@ class TrainingViewModel @Inject constructor(
        } else {
            trainingsRepositoryBE.savePrefAndFetchTraining(id.toLong())
        }
-        Log.d("VZ_TAG", "fetchTraining: $result")
+        if (result is ApiResult.Success) {
+            _state.value = _state.value.copy(
+                training = result.data?.data?.toDomain(),
+                isLoading = false
+            )
+
+        }
+        Log.d("VZ_TAG", "fetchTraining: ${result.data}")
         Log.d("VZ_TAG", "fetchTraining message: ${result.message}")
-//        _state.value = _state.value.copy(isLoading = true)
-//        delay(300)
-//        trainingRepository.fetchExercisesForTraining(id).map {
-//            _state.value = _state.value.copy(
-//                isLoading = false,
-//                training = it,
-//                completionProgress = calculateCompletionProgress(it.exercises)
-//            )
-//        }.launchIn(this)
     }
 
     fun startTraining() {

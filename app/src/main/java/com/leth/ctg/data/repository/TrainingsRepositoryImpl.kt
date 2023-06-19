@@ -7,6 +7,7 @@ import com.leth.ctg.data.database.dao.TrainingFormatsDao
 import com.leth.ctg.data.database.dao.TrainingsDao
 import com.leth.ctg.data.database.entity.toDomain
 import com.leth.ctg.data.database.entity.toDto
+import com.leth.ctg.data.database.entity.toEntity
 import com.leth.ctg.data.dto.TrainingDto
 import com.leth.ctg.data.dto.toEntity
 import com.leth.ctg.data.requests.GenerateTrainingRequest
@@ -14,8 +15,6 @@ import com.leth.ctg.data.requests.TrainingForNewPreferenceRequest
 import com.leth.ctg.data.response.ResponseWithData
 import com.leth.ctg.domain.models.ApiResult
 import com.leth.ctg.domain.models.TrainingModel
-import com.leth.ctg.domain.models.TrainingSetupModel
-import com.leth.ctg.domain.models.toDto
 import com.leth.ctg.domain.repository.Preferences
 import com.leth.ctg.domain.repository.TrainingsRepositoryBE
 import kotlinx.coroutines.flow.Flow
@@ -77,6 +76,8 @@ class TrainingsRepositoryImpl(
                 "Bearer $token",
                 TrainingForNewPreferenceRequest(preference = preference.toDto())
             )
+            trainingFormatsDao.addFormat(preference.toEntity(response.data.id))
+            localPreferencesDao.removePreferences(preferenceId)
             ApiResult.Success(data = response)
 
         } catch (e: Exception) {

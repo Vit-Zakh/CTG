@@ -33,3 +33,11 @@ fun LocalPreferenceEntity.toDto() = PreferenceDto(
     isActive = isEnabled,
     templateId = "",
 )
+
+fun LocalPreferenceEntity.toEntity(id: String) = TrainingFormatEntity(
+    id = id,
+    title = title,
+    imageUrl = imageUrl,
+    trainingTypes = trainingTypes,
+    isEnabled = isEnabled,
+)
