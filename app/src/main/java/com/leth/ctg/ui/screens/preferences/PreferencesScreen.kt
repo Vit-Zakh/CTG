@@ -62,7 +62,7 @@ fun PreferencesScreen(
             if (event == Lifecycle.Event.ON_STOP) {
                 Log.d("VZ_TAG", "On stop called")
 //                viewModel.fetchTrainings()
-                viewModel.savePreferences()
+//                viewModel.savePreferences()
             }
         }
 

@@ -1,6 +1,7 @@
 package com.leth.ctg.data.dto
 
 import com.leth.ctg.data.database.entity.TrainingEntity
+import com.leth.ctg.domain.models.TrainingModel
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -16,4 +17,11 @@ fun TrainingDto.toEntity() = TrainingEntity(
     title = title,
     imageUrl = imageUrl,
     exercises = exercises.map { it.toEntity() },
+)
+
+fun TrainingDto.toDomain() = TrainingModel(
+    id = id,
+    title = title,
+    imageUrl = imageUrl,
+    exercises = exercises.map { it.toDomain() },
 )
