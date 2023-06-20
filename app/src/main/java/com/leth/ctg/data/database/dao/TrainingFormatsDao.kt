@@ -13,6 +13,9 @@ interface TrainingFormatsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveFormats(list: List<TrainingFormatEntity>)
 
+    @Query("SELECT * FROM training_formats WHERE id = :id")
+    suspend fun fetchFormatById(id: String): TrainingFormatEntity
+
     @Query("SELECT * FROM training_formats")
     fun fetchAllFormats(): Flow<List<TrainingFormatEntity>>
 

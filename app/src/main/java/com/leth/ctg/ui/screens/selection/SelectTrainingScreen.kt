@@ -40,7 +40,7 @@ fun SelectTrainingScreen(
     val context = LocalContext.current
     LaunchedEffect(context) {
         Log.d("VZ_TAG", "context changed")
-        viewModel.fetchDataForLoggedInUser()
+//        viewModel.fetchDataForLoggedInUser()
         viewModel.subscribeToTrainings()
     }
 

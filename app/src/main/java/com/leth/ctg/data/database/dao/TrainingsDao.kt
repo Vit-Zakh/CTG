@@ -11,11 +11,12 @@ interface TrainingsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addTraining(exercise: TrainingEntity)
 
+    @Query("SELECT * FROM trainings WHERE id = :id")
+    fun fetchTrainingById(id: String): TrainingEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveTrainings(list: List<TrainingEntity>)
 
-    @Query("SELECT * FROM trainings WHERE id = :id")
-    suspend fun fetchTraining(id: Long): TrainingEntity
 
     @Query("SELECT * FROM trainings")
     fun fetchTrainings(): Flow<List<TrainingEntity>>
@@ -24,10 +25,7 @@ interface TrainingsDao {
     fun fetchTrainings(ids: List<String>): List<TrainingEntity>
 
     @Query("SELECT * FROM trainings WHERE id = :id")
-    fun fetchTrainingFlow(id: Long): Flow<TrainingEntity>
-
-    @Query("UPDATE trainings SET exercises = :exercises WHERE id = :id")
-    suspend fun updateExercisesList(id: Long, exercises: List<ExerciseEntity>)
+    fun fetchTrainingFlow(id: String): Flow<TrainingEntity>
 
     @Query("DELETE FROM trainings")
     suspend fun deleteTrainings()

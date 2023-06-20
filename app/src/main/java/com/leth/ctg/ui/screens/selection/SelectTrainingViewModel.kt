@@ -43,8 +43,8 @@ class SelectTrainingViewModel @Inject constructor(
         }.stateIn(this)
     }
 
-    fun fetchDataForLoggedInUser() = viewModelScope.launch(Dispatchers.IO) {
-        Log.d("VZ_TAG", "fetchDataForLoggedInUser message: ${testRepo.fetchTrainings().message}")
-        Log.d("VZ_TAG", "fetchDataForLoggedInUser body: ${testRepo.fetchTrainings().data}")
-    }
+//    fun fetchDataForLoggedInUser() = viewModelScope.launch(Dispatchers.IO) {
+//        Log.d("VZ_TAG", "fetchDataForLoggedInUser message: ${testRepo.fetchTrainings().message}")
+//        Log.d("VZ_TAG", "fetchDataForLoggedInUser body: ${testRepo.fetchTrainings().data}")
+//    }
 }

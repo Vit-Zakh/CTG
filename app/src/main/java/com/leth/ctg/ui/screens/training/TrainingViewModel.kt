@@ -10,33 +10,36 @@ import com.leth.ctg.domain.repository.TrainingsRepositoryBE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TrainingViewModel @Inject constructor(
-    private val trainingsRepositoryBE: TrainingsRepositoryBE
+    private val trainingsRepositoryBE: TrainingsRepositoryBE,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<TrainingScreenState>(TrainingScreenState())
 
     val state = _state
 
-    fun fetchTraining(id: String) = viewModelScope.launch {
-       val result = if (id.toLongOrNull() == null) {
-           trainingsRepositoryBE.fetchTraining(id)
-       } else {
-           trainingsRepositoryBE.savePrefAndFetchTraining(id.toLong())
-       }
+    fun fetchTraining(id: String) = viewModelScope.launch(Dispatchers.IO) {
+        val result = if (id.toLongOrNull() == null) {
+            trainingsRepositoryBE.fetchTraining(id)
+        } else {
+            trainingsRepositoryBE.savePrefAndFetchTraining(id.toLong())
+        }
         if (result is ApiResult.Success) {
             _state.value = _state.value.copy(
-                training = result.data?.data?.toDomain(),
+                training = result.data,
                 isLoading = false
             )
-
+//            trainingsRepositoryBE.observeFormatById(id).map {
+//                _state.value = _state.value.copy(training = it)
+//            }.stateIn(this)
+//            _state.value = _state.value.copy(isLoading = false)
         }
-        Log.d("VZ_TAG", "fetchTraining: ${result.data}")
-        Log.d("VZ_TAG", "fetchTraining message: ${result.message}")
     }
 
     fun startTraining() {
