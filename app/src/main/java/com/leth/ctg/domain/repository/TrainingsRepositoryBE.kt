@@ -1,5 +1,6 @@
 package com.leth.ctg.domain.repository
 
+import com.leth.ctg.data.database.entity.TrainingFormatEntity
 import com.leth.ctg.data.dto.TrainingDto
 import com.leth.ctg.data.response.ResponseWithData
 import com.leth.ctg.domain.models.ApiResult
@@ -13,10 +14,12 @@ interface TrainingsRepositoryBE {
 
 //    val activeTrainings: Flow<List<TrainingModel>>
 
-    suspend fun fetchTrainings() : ApiResult<ResponseWithData<List<TrainingDto>>>
+    fun observeFormatById(id: String): Flow<TrainingModel>
 
-    suspend fun fetchTraining(prefId: String) : ApiResult<ResponseWithData<TrainingDto>>
-    suspend fun savePrefAndFetchTraining(preferenceId: Long) : ApiResult<ResponseWithData<TrainingDto>>
+//    suspend fun fetchTrainings() : ApiResult<ResponseWithData<List<TrainingDto>>>
+
+    suspend fun fetchTraining(prefId: String) : ApiResult<TrainingModel>
+    suspend fun savePrefAndFetchTraining(preferenceId: Long) : ApiResult<TrainingModel>
 
 //    suspend fun saveTrainings(trainings: List<TrainingSetupModel>) : ApiResult<Unit>
 
