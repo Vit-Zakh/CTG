@@ -1,5 +1,6 @@
 package com.leth.ctg.ui.views
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -53,6 +54,7 @@ fun ExerciseItem(
             .background(color = Color.LightGray),
         horizontalArrangement = Arrangement.Center,
     ) {
+        Log.d("VZ_TA", "ExerciseItem image model: ${exerciseModel.imageUrl}")
         AsyncImage(
             model = "http://${exerciseModel.imageUrl}",
             contentDescription = null,

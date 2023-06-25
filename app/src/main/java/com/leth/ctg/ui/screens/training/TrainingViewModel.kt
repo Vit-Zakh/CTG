@@ -1,9 +1,7 @@
 package com.leth.ctg.ui.screens.training
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.leth.ctg.data.dto.toDomain
 import com.leth.ctg.domain.models.ApiResult
 import com.leth.ctg.domain.models.ExerciseModel
 import com.leth.ctg.domain.repository.TrainingsRepositoryBE
@@ -31,14 +29,12 @@ class TrainingViewModel @Inject constructor(
             trainingsRepositoryBE.savePrefAndFetchTraining(id.toLong())
         }
         if (result is ApiResult.Success) {
-            _state.value = _state.value.copy(
-                training = result.data,
-                isLoading = false
-            )
-//            trainingsRepositoryBE.observeFormatById(id).map {
-//                _state.value = _state.value.copy(training = it)
-//            }.stateIn(this)
-//            _state.value = _state.value.copy(isLoading = false)
+            trainingsRepositoryBE.observeFormatById(requireNotNull(result.data?.id)).map {
+                _state.value = _state.value.copy(
+                    training = it,
+                    isLoading = false
+                )
+            }.stateIn(this)
         }
     }
 
@@ -72,10 +68,13 @@ class TrainingViewModel @Inject constructor(
         }
     }
 
-    fun regenerateExercise(exercise: ExerciseModel) =
+    fun regenerateExercise(prefId: String, exercise: ExerciseModel) =
         state.value.training?.let { training ->
             viewModelScope.launch(Dispatchers.IO) {
-//                trainingRepository.regenerateExercise(exercise, training)
+                trainingsRepositoryBE.regenerateExercise(
+                    prefId = prefId,
+                    exerciseId = exercise.id,
+                )
             }
         }
 

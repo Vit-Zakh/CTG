@@ -9,13 +9,16 @@ import com.leth.ctg.data.database.entity.TrainingFormatEntity
 import com.leth.ctg.data.database.entity.toDomain
 import com.leth.ctg.data.database.entity.toDto
 import com.leth.ctg.data.database.entity.toEntity
+import com.leth.ctg.data.dto.ExerciseDto
 import com.leth.ctg.data.dto.TrainingDto
 import com.leth.ctg.data.dto.toDomain
 import com.leth.ctg.data.dto.toEntity
 import com.leth.ctg.data.requests.GenerateTrainingRequest
+import com.leth.ctg.data.requests.RegenerateExerciseRequest
 import com.leth.ctg.data.requests.TrainingForNewPreferenceRequest
 import com.leth.ctg.data.response.ResponseWithData
 import com.leth.ctg.domain.models.ApiResult
+import com.leth.ctg.domain.models.ExerciseModel
 import com.leth.ctg.domain.models.TrainingModel
 import com.leth.ctg.domain.repository.Preferences
 import com.leth.ctg.domain.repository.TrainingsRepositoryBE
@@ -47,19 +50,6 @@ class TrainingsRepositoryImpl(
                 )
             }
     }
-
-//    override suspend fun fetchTrainings(): ApiResult<ResponseWithData<List<TrainingDto>>> {
-//        return try {
-////            val token = sharedPreferences.getToken() ?: return ApiResult.Error()
-////            val response = api.fetchTrainings("Bearer $token")
-////            Log.d("VZ_TAG", "fetchTrainings amount: ${response.data.size}")
-////            trainingsDao.saveTrainings(response.data.map { it.toEntity() })
-////            ApiResult.Success(data = response)
-//            ApiResult.Success()
-//        } catch (e: Exception) {
-//            ApiResult.Error(e.message ?: "Unknown error")
-//        }
-//    }
 
     override suspend fun fetchTraining(prefId: String): ApiResult<TrainingModel> {
 
@@ -113,7 +103,44 @@ class TrainingsRepositoryImpl(
     }
 
     override fun observeFormatById(id: String): Flow<TrainingModel> {
-        return emptyFlow()
-//        return trainingsDao.fetchTrainingFlow(id).mapNotNull { it.toDomain() }
+        return trainingsDao.fetchTrainingFlow(id).mapNotNull { it.toDomain() }
+    }
+
+    override suspend fun regenerateExercise(
+        prefId: String,
+        exerciseId: String,
+    ): ApiResult<Unit> {
+        Log.d("VZ_TAG", "trying to regenerate exercise")
+        return try {
+            val token = sharedPreferences.getToken() ?: return ApiResult.Error()
+//            val preference = trainingFormatsDao.fetchFormatById(prefId)
+            val response = api.regenerateExercise(
+                "Bearer $token",
+                RegenerateExerciseRequest(prefId = prefId, exerciseId = exerciseId)
+            )
+            Log.d("VZ_TAG", "response data = ${response.data}")
+            Log.d("VZ_TAG", "response = ${response}")
+            val oldTraining = trainingsDao.fetchTrainingById(prefId)
+                ?: return ApiResult.Error("No training to update")
+            val exercise = response.data
+            Log.d("VZ_TAG", "new exercise = $exercise")
+            val updatedExerciseList = oldTraining.exercises.toMutableList()
+            val index = updatedExerciseList.indexOfFirst { it.id == exerciseId }
+            updatedExerciseList[index] = exercise.toEntity()
+            val newTraining = oldTraining.copy(exercises = updatedExerciseList)
+            Log.d("VZ_TAG", "old list = ${oldTraining.exercises.map { it.id }}")
+            Log.d("VZ_TAG", "new list = ${updatedExerciseList.map { it.id }}")
+            trainingsDao.updateTraining(newTraining)
+//            val exerciseIndex = updatedExerciseList.indexOf()
+//            val updatedExercise = oldTraining.copy()
+//            trainingsDao.addTraining(
+//                training.toEntity(preference.trainingTypes)
+//            )
+            ApiResult.Success()
+
+        } catch (e: Exception) {
+            Log.d("VZ_TAG", "error! ${e.message}")
+            ApiResult.Error(e.message ?: "Unknown error")
+        }
     }
 }
