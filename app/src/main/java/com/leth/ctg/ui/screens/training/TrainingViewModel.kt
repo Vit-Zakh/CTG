@@ -80,7 +80,7 @@ class TrainingViewModel @Inject constructor(
 
     fun regenerateTraining() = state.value.training?.let { training ->
         viewModelScope.launch {
-//            trainingRepository.regenerateTraining(training)
+            trainingsRepositoryBE.regenerateTraining(training.id)
         }
     }
 

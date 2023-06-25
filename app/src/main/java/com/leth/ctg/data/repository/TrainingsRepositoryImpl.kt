@@ -54,11 +54,8 @@ class TrainingsRepositoryImpl(
     override suspend fun fetchTraining(prefId: String): ApiResult<TrainingModel> {
 
         val cachedTraining = trainingsDao.fetchTrainingById(prefId)
-        Log.d("VZ_TAG", "cachedTraining $cachedTraining")
         val isTrainingFinished = cachedTraining?.exercises?.all { it.isFinished } == true
-        Log.d("VZ_TAG", "isTrainingFinished $isTrainingFinished")
         if (cachedTraining != null && !isTrainingFinished) {
-            Log.d("VZ_TAG", "returning cached training")
             return ApiResult.Success(cachedTraining.toDomain())
         }
 
@@ -110,36 +107,42 @@ class TrainingsRepositoryImpl(
         prefId: String,
         exerciseId: String,
     ): ApiResult<Unit> {
-        Log.d("VZ_TAG", "trying to regenerate exercise")
         return try {
             val token = sharedPreferences.getToken() ?: return ApiResult.Error()
-//            val preference = trainingFormatsDao.fetchFormatById(prefId)
             val response = api.regenerateExercise(
                 "Bearer $token",
                 RegenerateExerciseRequest(prefId = prefId, exerciseId = exerciseId)
             )
-            Log.d("VZ_TAG", "response data = ${response.data}")
-            Log.d("VZ_TAG", "response = ${response}")
             val oldTraining = trainingsDao.fetchTrainingById(prefId)
                 ?: return ApiResult.Error("No training to update")
             val exercise = response.data
-            Log.d("VZ_TAG", "new exercise = $exercise")
             val updatedExerciseList = oldTraining.exercises.toMutableList()
             val index = updatedExerciseList.indexOfFirst { it.id == exerciseId }
             updatedExerciseList[index] = exercise.toEntity()
             val newTraining = oldTraining.copy(exercises = updatedExerciseList)
-            Log.d("VZ_TAG", "old list = ${oldTraining.exercises.map { it.id }}")
-            Log.d("VZ_TAG", "new list = ${updatedExerciseList.map { it.id }}")
             trainingsDao.updateTraining(newTraining)
-//            val exerciseIndex = updatedExerciseList.indexOf()
-//            val updatedExercise = oldTraining.copy()
-//            trainingsDao.addTraining(
-//                training.toEntity(preference.trainingTypes)
-//            )
             ApiResult.Success()
 
         } catch (e: Exception) {
             Log.d("VZ_TAG", "error! ${e.message}")
+            ApiResult.Error(e.message ?: "Unknown error")
+        }
+    }
+
+    override suspend fun regenerateTraining(trainingId: String): ApiResult<Unit> {
+        return try {
+            val preference = trainingFormatsDao.fetchFormatById(trainingId)
+            val token = sharedPreferences.getToken() ?: return ApiResult.Error()
+            val response = api.generateTraining(
+                "Bearer $token",
+                GenerateTrainingRequest(prefId = trainingId)
+            )
+            val training = response.data
+            trainingsDao.updateTraining(
+                training.toEntity(preference.trainingTypes)
+            )
+            ApiResult.Success()
+        } catch (e: Exception) {
             ApiResult.Error(e.message ?: "Unknown error")
         }
     }

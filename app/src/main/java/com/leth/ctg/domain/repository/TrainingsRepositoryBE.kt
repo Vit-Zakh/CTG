@@ -25,6 +25,8 @@ interface TrainingsRepositoryBE {
 
     suspend fun regenerateExercise(prefId: String, exerciseId: String) : ApiResult<Unit>
 
+    suspend fun regenerateTraining(trainingId: String): ApiResult<Unit>
+
 //    suspend fun saveTrainings(trainings: List<TrainingSetupModel>) : ApiResult<Unit>
 
 }

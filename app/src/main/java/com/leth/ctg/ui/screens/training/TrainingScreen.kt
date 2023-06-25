@@ -1,6 +1,5 @@
 package com.leth.ctg.ui.screens.training
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -90,7 +89,6 @@ fun TrainingScreen(
                 text = "${state.value.training?.exercises?.size} exercises",
                 modifier = Modifier.height(42.dp)
             )
-            Log.d("VZ_TAG", "rendering list: ")
             state.value.training?.exercises?.let { exercises ->
                 LazyColumn(
                     modifier = Modifier
