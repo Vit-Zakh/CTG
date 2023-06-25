@@ -6,4 +6,5 @@ import kotlinx.serialization.Serializable
 data class RegenerateExerciseRequest(
     val prefId: String,
     val exerciseId: String,
+    val currentExercisesIds: List<String>
 )

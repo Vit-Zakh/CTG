@@ -5,27 +5,20 @@ import com.leth.ctg.data.api.TrainingsApi
 import com.leth.ctg.data.database.dao.LocalPreferencesDao
 import com.leth.ctg.data.database.dao.TrainingFormatsDao
 import com.leth.ctg.data.database.dao.TrainingsDao
-import com.leth.ctg.data.database.entity.TrainingFormatEntity
 import com.leth.ctg.data.database.entity.toDomain
 import com.leth.ctg.data.database.entity.toDto
 import com.leth.ctg.data.database.entity.toEntity
-import com.leth.ctg.data.dto.ExerciseDto
-import com.leth.ctg.data.dto.TrainingDto
 import com.leth.ctg.data.dto.toDomain
 import com.leth.ctg.data.dto.toEntity
 import com.leth.ctg.data.requests.GenerateTrainingRequest
 import com.leth.ctg.data.requests.RegenerateExerciseRequest
 import com.leth.ctg.data.requests.TrainingForNewPreferenceRequest
-import com.leth.ctg.data.response.ResponseWithData
 import com.leth.ctg.domain.models.ApiResult
-import com.leth.ctg.domain.models.ExerciseModel
 import com.leth.ctg.domain.models.TrainingModel
 import com.leth.ctg.domain.repository.Preferences
 import com.leth.ctg.domain.repository.TrainingsRepositoryBE
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 
 class TrainingsRepositoryImpl(
@@ -54,6 +47,7 @@ class TrainingsRepositoryImpl(
     override suspend fun fetchTraining(prefId: String): ApiResult<TrainingModel> {
 
         val cachedTraining = trainingsDao.fetchTrainingById(prefId)
+//        val hasSameTags =
         val isTrainingFinished = cachedTraining?.exercises?.all { it.isFinished } == true
         if (cachedTraining != null && !isTrainingFinished) {
             return ApiResult.Success(cachedTraining.toDomain())
@@ -65,7 +59,10 @@ class TrainingsRepositoryImpl(
             val token = sharedPreferences.getToken() ?: return ApiResult.Error()
             val response = api.generateTraining(
                 "Bearer $token",
-                GenerateTrainingRequest(prefId = prefId)
+                GenerateTrainingRequest(
+                    prefId = prefId,
+                    currentExercisesIds = emptyMap(),
+                )
             )
             val training = response.data
             trainingsDao.addTraining(
@@ -109,12 +106,16 @@ class TrainingsRepositoryImpl(
     ): ApiResult<Unit> {
         return try {
             val token = sharedPreferences.getToken() ?: return ApiResult.Error()
-            val response = api.regenerateExercise(
-                "Bearer $token",
-                RegenerateExerciseRequest(prefId = prefId, exerciseId = exerciseId)
-            )
             val oldTraining = trainingsDao.fetchTrainingById(prefId)
                 ?: return ApiResult.Error("No training to update")
+            val response = api.regenerateExercise(
+                "Bearer $token",
+                RegenerateExerciseRequest(
+                    prefId = prefId,
+                    exerciseId = exerciseId,
+                    currentExercisesIds = oldTraining.exercises.map { it.id },
+                )
+            )
             val exercise = response.data
             val updatedExerciseList = oldTraining.exercises.toMutableList()
             val index = updatedExerciseList.indexOfFirst { it.id == exerciseId }
@@ -131,13 +132,24 @@ class TrainingsRepositoryImpl(
 
     override suspend fun regenerateTraining(trainingId: String): ApiResult<Unit> {
         return try {
+            Log.d("VZ_TAG", "trying to regenerate training... ")
             val preference = trainingFormatsDao.fetchFormatById(trainingId)
+            val oldTraining = trainingsDao.fetchTrainingById(trainingId) ?: return ApiResult.Error()
             val token = sharedPreferences.getToken() ?: return ApiResult.Error()
+
+
             val response = api.generateTraining(
                 "Bearer $token",
-                GenerateTrainingRequest(prefId = trainingId)
+                GenerateTrainingRequest(
+                    prefId = trainingId,
+                    currentExercisesIds = oldTraining.exercises.groupBy { it.type }
+                        .mapValues { (_, values) ->
+                            values.map { it.id }
+                        }
+                )
             )
             val training = response.data
+            Log.d("VZ_TAG", "new training: ${training}")
             trainingsDao.updateTraining(
                 training.toEntity(preference.trainingTypes)
             )
