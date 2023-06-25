@@ -30,4 +30,7 @@ interface TrainingsDao {
     @Query("DELETE FROM trainings")
     suspend fun deleteTrainings()
 
+    @Update
+    suspend fun updateTraining(training: TrainingEntity)
+
 }

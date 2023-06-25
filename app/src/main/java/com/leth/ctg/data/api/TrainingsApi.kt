@@ -1,7 +1,9 @@
 package com.leth.ctg.data.api
 
+import com.leth.ctg.data.dto.ExerciseDto
 import com.leth.ctg.data.dto.TrainingDto
 import com.leth.ctg.data.requests.GenerateTrainingRequest
+import com.leth.ctg.data.requests.RegenerateExerciseRequest
 import com.leth.ctg.data.requests.SaveTrainingsRequest
 import com.leth.ctg.data.requests.TrainingForNewPreferenceRequest
 import com.leth.ctg.data.response.ResponseWithData
@@ -33,4 +35,10 @@ interface TrainingsApi {
         @Header("Authorization") token: String,
         @Body request: TrainingForNewPreferenceRequest,
     ) : ResponseWithData<TrainingDto>
+
+    @POST("regenerate_exercise")
+    suspend fun regenerateExercise(
+        @Header("Authorization") token: String,
+        @Body request: RegenerateExerciseRequest,
+    ) : ResponseWithData<ExerciseDto>
 }

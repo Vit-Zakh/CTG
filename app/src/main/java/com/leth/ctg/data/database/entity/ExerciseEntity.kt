@@ -27,6 +27,7 @@ fun ExerciseEntity.toDomain() = ExerciseModel(
     title = title,
     category = category,
     isCompleted = wasLastTime,
+    imageUrl = imageUrl,
 )
 
 fun ExerciseEntity.toDto() = ExerciseDto(
