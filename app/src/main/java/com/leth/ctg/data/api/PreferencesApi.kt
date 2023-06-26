@@ -1,6 +1,7 @@
 package com.leth.ctg.data.api
 
 import com.leth.ctg.data.dto.PreferenceDto
+import com.leth.ctg.data.requests.DeletePreferenceRequest
 import com.leth.ctg.data.requests.SavePreferenceRequest
 import com.leth.ctg.data.requests.SavePreferencesRequest
 import com.leth.ctg.data.response.ResponseWithData
@@ -26,4 +27,10 @@ interface PreferencesApi {
     suspend fun fetchPreferences(
         @Header("Authorization") token: String,
     ) : ResponseWithData<List<PreferenceDto>>
+
+    @POST("delete_preference")
+    suspend fun deletePreference(
+        @Header("Authorization") token: String,
+        @Body request: DeletePreferenceRequest,
+    )
 }

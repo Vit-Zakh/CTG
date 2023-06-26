@@ -61,4 +61,16 @@ class PreferencesViewModel @Inject constructor(
             preferencesRepositoryBE.savePreferences(state.value.list)
         }
     }
+
+    fun deletePreference(pref: TrainingSetupModel) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (pref.id != null) {
+                preferencesRepositoryBE.deleteCachedPref(pref.id)
+            } else {
+                preferencesRepositoryBE.deleteLocalPref(requireNotNull(pref.localId))
+            }
+        }
+    }
+
+
 }

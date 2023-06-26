@@ -10,6 +10,7 @@ import com.leth.ctg.data.database.entity.TrainingFormatEntity
 import com.leth.ctg.data.database.entity.toDomain
 import com.leth.ctg.data.dto.PreferenceDto
 import com.leth.ctg.data.dto.toEntity
+import com.leth.ctg.data.requests.DeletePreferenceRequest
 import com.leth.ctg.data.requests.SavePreferenceRequest
 import com.leth.ctg.data.requests.SavePreferencesRequest
 import com.leth.ctg.data.response.ResponseWithData
@@ -108,6 +109,29 @@ class UserPreferencesRepositoryImpl(
         } catch (e: Exception) {
             Log.d("VZ_TAG", "error! ${e.message}")
             ApiResult.Error(e.message ?: "Unknown error")
+        }
+    }
+
+    override suspend fun deleteLocalPref(prefId: Long) {
+        localPreferencesDao.removePreferences(prefId)
+    }
+
+    override suspend fun deleteCachedPref(prefId: String) : ApiResult<Unit> {
+        return try {
+            val token = sharedPreferences.getToken() ?: return ApiResult.Error()
+            api.deletePreference(
+                "Bearer $token",
+                DeletePreferenceRequest(preferenceId = prefId)
+            )
+//            Log.d("VZ_TAG", "preference created")
+            trainingFormatsDao.removeFormat(prefId)
+            ApiResult.Success<Unit>()
+
+        } catch (e: Exception) {
+            Log.d("VZ_TAG", "error! ${e.message}")
+            //schedule a worker
+            trainingFormatsDao.removeFormat(prefId)
+            ApiResult.Error<Unit>(e.message ?: "Unknown error")
         }
     }
 }

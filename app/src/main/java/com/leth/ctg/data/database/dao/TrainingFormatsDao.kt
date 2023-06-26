@@ -33,4 +33,7 @@ interface TrainingFormatsDao {
 
     @Query("UPDATE training_formats SET isEnabled = 1 WHERE id = :id")
     suspend fun changeFormatActivity(id: String)
+
+    @Query("DELETE FROM training_formats WHERE id = :id")
+    suspend fun removeFormat(id: String)
 }
