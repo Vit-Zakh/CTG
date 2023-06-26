@@ -1,9 +1,12 @@
 package com.leth.ctg.ui.views
 
 import android.util.Log
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -20,18 +23,25 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -44,6 +54,66 @@ import com.leth.ctg.domain.models.TrainingSetupModel
 import com.leth.ctg.ui.theme.CTGTheme
 import com.leth.ctg.ui.theme.Purple80
 import com.leth.ctg.utils.TrainingType
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TrainingSetupItemWithSwipe(
+    training: TrainingSetupModel,
+    onTagClick: (TrainingSetupModel) -> Unit,
+    delayedTrainingUpdate: (TrainingSetupModel) -> Unit,
+    onSwipe: (TrainingSetupModel) -> Unit,
+) {
+    val dismissState = rememberDismissState(
+        confirmValueChange = {
+            if (it == DismissValue.DismissedToStart) {
+                onSwipe.invoke(training)
+            }
+            it != DismissValue.DismissedToStart
+        }
+    )
+
+    SwipeToDismiss(
+        state = dismissState,
+        modifier = Modifier.padding(vertical = 4.dp),
+        directions = setOf(DismissDirection.EndToStart),
+        background = {
+            val direction = dismissState.dismissDirection ?: return@SwipeToDismiss
+            val color by animateColorAsState(
+                when (dismissState.targetValue) {
+                    DismissValue.Default -> Color.LightGray
+                    DismissValue.DismissedToEnd -> Color.Transparent
+                    DismissValue.DismissedToStart -> Color.Red.copy(alpha = 0.4f)
+                }
+            )
+            val scale by animateFloatAsState(
+                if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
+            )
+
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(color)
+                    .padding(horizontal = 20.dp),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = "Localized description",
+                    modifier = Modifier.scale(scale)
+                )
+            }
+        },
+        dismissContent = {
+            TrainingSetupItem(
+                training = training,
+                onTagClick = onTagClick,
+                delayedTrainingUpdate = delayedTrainingUpdate
+            )
+        }
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

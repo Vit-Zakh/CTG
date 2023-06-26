@@ -145,5 +145,6 @@ object RepositoryModule {
         sharedPreferences: Preferences,
         trainingFormatsDao: TrainingFormatsDao,
         localPreferencesDao: LocalPreferencesDao,
-    ): UserPreferencesRepositoryBE = UserPreferencesRepositoryImpl(api, sharedPreferences,trainingFormatsDao, localPreferencesDao)
+        trainingsDao: TrainingsDao,
+    ): UserPreferencesRepositoryBE = UserPreferencesRepositoryImpl(api, sharedPreferences,trainingFormatsDao, localPreferencesDao, trainingsDao)
 }

@@ -22,4 +22,7 @@ interface UserPreferencesRepositoryBE {
 
     suspend fun savePreference(preference: TrainingSetupModel) : ApiResult<PreferenceDto>
 
+    suspend fun deleteLocalPref(prefId: Long)
+
+    suspend fun deleteCachedPref(prefId: String) : ApiResult<Unit>
 }
