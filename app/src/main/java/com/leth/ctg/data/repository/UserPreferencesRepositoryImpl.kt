@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import com.leth.ctg.data.api.PreferencesApi
 import com.leth.ctg.data.database.dao.LocalPreferencesDao
 import com.leth.ctg.data.database.dao.TrainingFormatsDao
+import com.leth.ctg.data.database.dao.TrainingsDao
 import com.leth.ctg.data.database.entity.LocalPreferenceEntity
 import com.leth.ctg.data.database.entity.TrainingFormatEntity
 import com.leth.ctg.data.database.entity.toDomain
@@ -31,6 +32,7 @@ class UserPreferencesRepositoryImpl(
     private val sharedPreferences: Preferences,
     private val trainingFormatsDao: TrainingFormatsDao,
     private val localPreferencesDao: LocalPreferencesDao,
+    private val trainingsDao: TrainingsDao,
 ) : UserPreferencesRepositoryBE {
 
     override val preferences: Flow<List<TrainingSetupModel>> = combine(
@@ -123,13 +125,13 @@ class UserPreferencesRepositoryImpl(
                 "Bearer $token",
                 DeletePreferenceRequest(preferenceId = prefId)
             )
-//            Log.d("VZ_TAG", "preference created")
             trainingFormatsDao.removeFormat(prefId)
+            trainingsDao.removeTraining(prefId)
             ApiResult.Success<Unit>()
 
         } catch (e: Exception) {
             Log.d("VZ_TAG", "error! ${e.message}")
-            //schedule a worker
+            //schedule a worker here TODO
             trainingFormatsDao.removeFormat(prefId)
             ApiResult.Error<Unit>(e.message ?: "Unknown error")
         }

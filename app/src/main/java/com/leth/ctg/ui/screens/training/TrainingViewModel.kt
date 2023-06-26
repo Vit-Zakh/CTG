@@ -1,5 +1,6 @@
 package com.leth.ctg.ui.screens.training
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.leth.ctg.domain.models.ApiResult
@@ -68,11 +69,11 @@ class TrainingViewModel @Inject constructor(
         }
     }
 
-    fun regenerateExercise(prefId: String, exercise: ExerciseModel) =
+    fun regenerateExercise(exercise: ExerciseModel) =
         state.value.training?.let { training ->
             viewModelScope.launch(Dispatchers.IO) {
-                trainingsRepositoryBE.regenerateExercise(
-                    prefId = prefId,
+               trainingsRepositoryBE.regenerateExercise(
+                    prefId = training.id,
                     exerciseId = exercise.id,
                 )
             }

@@ -100,7 +100,7 @@ fun TrainingScreen(
                     items(exercises) {
                         ExerciseItem(
                             exerciseModel = it,
-                            regenerate = { viewModel.regenerateExercise(trainingId!!, it) },
+                            regenerate = { viewModel.regenerateExercise(it) },
                             isTrainingActive = state.value.isActive,
                             completeExercise = { viewModel.completeExercise(it.id) }
                         )
